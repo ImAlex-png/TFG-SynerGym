@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.synergym.persistence.entities.Alumno;
 import com.synergym.services.AlumnoService;
+import com.synergym.services.exceptions.AlumnoException;
 import com.synergym.services.exceptions.AlumnoNotFoundException;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +28,7 @@ public class AlumnoController {
     private AlumnoService alumnoService;
 
 
+    //Todos los alumnos
     @GetMapping
     public ResponseEntity<List<Alumno>> list(){
         return ResponseEntity.ok(this.alumnoService.findAll());
@@ -45,8 +47,34 @@ public class AlumnoController {
     //Crerar un alumno
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Alumno alumno) {
-       return ResponseEntity.status(HttpStatus.CREATED).body(this.alumnoService.create(alumno));
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED).body(this.alumnoService.create(alumno));
+        } catch (AlumnoException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
+    }
+
+    //Actualizar un alumno por ID
+    @PostMapping("/update/{idAlumno}")
+    public ResponseEntity<?> update(@PathVariable int idAlumno, @RequestBody Alumno alumno) {
+        try {
+            return ResponseEntity.ok(this.alumnoService.update(alumno, idAlumno));
+        } catch (AlumnoNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        } catch (AlumnoException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
     }
    
+    //Eliminar un alumno
+    @PostMapping("/delete/{idAlumno}")
+    public ResponseEntity<?> deleteById(@PathVariable int idAlumno) {
+        try {
+            this.alumnoService.deleteById(idAlumno);
+            return ResponseEntity.ok().build();
+        } catch (AlumnoNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        }
+    }
     
 }

@@ -1,6 +1,6 @@
 package com.synergym.services.exceptions;
 
-class AlumnoException extends RuntimeException {
+public class AlumnoException extends RuntimeException {
 
 
     private static final long serialVersionUID = 1L;

@@ -35,7 +35,7 @@ public class AlumnoService {
     }
 
     //Actualizar datos alumno
-    public Alumno update(Alumno alumno) {
+    public Alumno update(Alumno alumno, int idAlumno) {
         Alumno alumnoBD = this.findById(idAlumno);
         alumnoBD.setNombre(alumno.getNombre());
         alumnoBD.setApellidos(alumno.getApellidos());
