@@ -19,7 +19,7 @@ public class EntrenadorService extends RuntimeException {
         return entrenadorService.findAll();
     }
 
-    //Inscripcion por ID
+    //Entrenador por ID
     public Entrenador findById(int idEntrenador) {
         if(!this.entrenadorService.existsById(idEntrenador)) {
             throw new  EntrenadorNotFoundException("El ID indicado no existe");
