@@ -6,5 +6,6 @@ import com.synergym.persistence.entities.Alumno;
 
 public interface AlumnoRepository extends JpaRepository<Alumno, Integer> {
 
+
     
 }
