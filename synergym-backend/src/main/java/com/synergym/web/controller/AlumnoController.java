@@ -13,7 +13,6 @@ import com.synergym.services.AlumnoService;
 import com.synergym.services.exceptions.AlumnoException;
 import com.synergym.services.exceptions.AlumnoNotFoundException;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,7 +44,7 @@ public class AlumnoController {
         }
     }
 
-    //Crear un alumno
+    //Crerar un alumno
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Alumno alumno) {
         try {
@@ -68,7 +67,7 @@ public class AlumnoController {
     }
    
     //Eliminar un alumno
-    @DeleteMapping("/delete/{idAlumno}")
+    @PostMapping("/delete/{idAlumno}")
     public ResponseEntity<?> deleteById(@PathVariable int idAlumno) {
         try {
             this.alumnoService.deleteById(idAlumno);

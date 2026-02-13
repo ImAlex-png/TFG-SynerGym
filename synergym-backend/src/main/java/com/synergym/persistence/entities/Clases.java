@@ -42,4 +42,5 @@ public class Clases {
     @OneToMany(mappedBy = "clases")
     private List<Inscripcion> inscripciones;
 
+    //Getter and setters
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.synergym.persistence.entities.Clases;
+
 import com.synergym.persistence.repositories.ClasesRepository;
 import com.synergym.services.exceptions.ClaseNotFoundException;
 import com.synergym.services.exceptions.ClasesException;

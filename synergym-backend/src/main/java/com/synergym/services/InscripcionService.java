@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.synergym.persistence.entities.Alumno;
 import com.synergym.persistence.entities.Inscripcion;
+
 import com.synergym.persistence.entities.enums.Estado;
 import com.synergym.persistence.repositories.InscripcionRepository;
 import com.synergym.services.exceptions.InscripcionNotFoundException;

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.synergym.persistence.entities.Entrenador;
+
 import com.synergym.persistence.repositories.EntrenadorRepository;
 import com.synergym.services.exceptions.EntrenadorNotFoundException;
 
@@ -20,7 +21,7 @@ public class EntrenadorService {
         return entrenadorRepository.findAll();
     }
 
-    // Entrenador por ID
+    // Inscripcion por ID
     public Entrenador findById(int idEntrenador) {
         if (!this.entrenadorRepository.existsById(idEntrenador)) {
             throw new EntrenadorNotFoundException("El ID indicado no existe");
