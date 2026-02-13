@@ -12,7 +12,7 @@ import com.synergym.services.exceptions.ClaseNotFoundException;
 import com.synergym.services.exceptions.ClasesException;
 
 @Service
-public class ClaseService extends RuntimeException {
+public class ClaseService {
 
     @Autowired
     private ClasesRepository clasesRepository;
@@ -24,7 +24,7 @@ public class ClaseService extends RuntimeException {
 
     // Find clase by ID
     public Clases findById(int idClase) {
-        if (!this.clasesRepository.existById(idClase)) {
+        if (!this.clasesRepository.existsById(idClase)) {
             throw new ClaseNotFoundException("La clase con el ID" + idClase + " no existe");
         }
         return this.clasesRepository.findById(idClase).get();
@@ -55,9 +55,9 @@ public class ClaseService extends RuntimeException {
         return this.clasesRepository.save(clase);
     }
 
-    //Eliminar una clase por ID
+    // Eliminar una clase por ID
     public void delete(int idClase) {
-        if(!this.clasesRepository.existById(idClase)) {
+        if (!this.clasesRepository.existsById(idClase)) {
             throw new ClaseNotFoundException("La clase con el ID " + idClase + " no existe");
         }
         this.clasesRepository.deleteById(idClase);
@@ -65,15 +65,15 @@ public class ClaseService extends RuntimeException {
 
     // Update clase ( no se puede modificar la fecha de inicio)
     public Clases update(Clases clase, int idClase) {
-        if(clase.getIdClases() != idClase) {
+        if (clase.getIdClases() != idClase) {
             throw new ClasesException("El ID de la clase no coincide con el ID de la URL");
         }
 
-        if(!this.clasesRepository.existById(idClase)) {
+        if (!this.clasesRepository.existsById(idClase)) {
             throw new ClasesException("La tarea con el ID " + idClase + " no existe");
         }
 
-        if(clase.getFechaInicio() != null) {
+        if (clase.getFechaInicio() != null) {
             throw new ClasesException("La fecha de inicio no se puede modificar");
         }
 

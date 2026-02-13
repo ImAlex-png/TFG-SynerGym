@@ -34,7 +34,7 @@ public class AlumnoService {
         return this.alumnoRepository.save(alumno);
     }
 
-    //Actualizar datos alumno
+    // Actualizar datos alumno
     public Alumno update(Alumno alumno, int idAlumno) {
         Alumno alumnoBD = this.findById(idAlumno);
         alumnoBD.setNombre(alumno.getNombre());
@@ -44,8 +44,8 @@ public class AlumnoService {
     }
 
     // Eliminar alumno
-    public void deleteById( int idAlumno) {
-        if(!this.alumnoRepository.existById(idAlumno)) {
+    public void deleteById(int idAlumno) {
+        if (!this.alumnoRepository.existsById(idAlumno)) {
             throw new AlumnoNotFoundException("El ID indicado no existe");
         }
         this.alumnoRepository.deleteById(idAlumno);

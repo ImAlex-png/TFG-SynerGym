@@ -28,10 +28,10 @@ public class Alumno {
 
     @Column(length = 50)
     private String nombre;
-    
+
     @Column(length = 100)
     private String apellidos;
-    
+
     @Column(length = 9)
     private String dni;
 

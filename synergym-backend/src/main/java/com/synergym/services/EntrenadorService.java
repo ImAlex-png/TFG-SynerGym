@@ -6,57 +6,58 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.synergym.persistence.entities.Entrenador;
+import com.synergym.persistence.repositories.EntrenadorRepository;
 import com.synergym.services.exceptions.EntrenadorNotFoundException;
 
 @Service
-public class EntrenadorService extends RuntimeException {
-    
-    @Autowired
-    private EntrenadorService entrenadorService;
+public class EntrenadorService {
 
-    //Ver todas los entrenadores
+    @Autowired
+    private EntrenadorRepository entrenadorRepository;
+
+    // Ver todas los entrenadores
     public List<Entrenador> findAll() {
-        return entrenadorService.findAll();
+        return entrenadorRepository.findAll();
     }
 
-    //Entrenador por ID
+    // Entrenador por ID
     public Entrenador findById(int idEntrenador) {
-        if(!this.entrenadorService.existsById(idEntrenador)) {
-            throw new  EntrenadorNotFoundException("El ID indicado no existe");
+        if (!this.entrenadorRepository.existsById(idEntrenador)) {
+            throw new EntrenadorNotFoundException("El ID indicado no existe");
         }
-        return this.entrenadorService.findById(idEntrenador).get();
+        return this.entrenadorRepository.findById(idEntrenador).get();
     }
 
     // Crear entrenador
     public Entrenador create(Entrenador entrenador) {
-        
-        if(entrenador.getNombre() == null || entrenador.getNombre().trim().isEmpty()) {
+
+        if (entrenador.getNombre() == null || entrenador.getNombre().trim().isEmpty()) {
             throw new EntrenadorNotFoundException("El nombre del entrenador es obligatorio");
         }
 
-        if(entrenador.getIdEntrenador() != 0) {
+        if (entrenador.getIdEntrenador() != 0) {
             throw new EntrenadorNotFoundException("El ID del entrenador debe ser 0 al crear un nuevo entrenador");
         }
 
         entrenador.setIdEntrenador(0);
 
-        return this.entrenadorService.save(entrenador);
+        return this.entrenadorRepository.save(entrenador);
     }
 
-    //Actualizar entrenador
+    // Actualizar entrenador
     public Entrenador update(Entrenador entrenador, int idEntrenador) {
         Entrenador entrenadorBD = this.findById(idEntrenador);
         entrenadorBD.setNombre(entrenador.getNombre());
         entrenadorBD.setApellidos(entrenador.getApellidos());
         entrenadorBD.setClases(entrenador.getClases());
-        return this.entrenadorService.save(entrenadorBD);
+        return this.entrenadorRepository.save(entrenadorBD);
     }
 
     // Eliminar entrenador
-    public void deleteById( int idEntrenador) {
-        if(!this.entrenadorService.existById(idEntrenador)) {
+    public void deleteById(int idEntrenador) {
+        if (!this.entrenadorRepository.existsById(idEntrenador)) {
             throw new EntrenadorNotFoundException("El ID indicado no existe");
         }
-        this.entrenadorService.deleteById(idEntrenador);
+        this.entrenadorRepository.deleteById(idEntrenador);
     }
 }
