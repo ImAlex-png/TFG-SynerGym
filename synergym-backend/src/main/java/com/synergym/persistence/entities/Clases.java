@@ -1,6 +1,7 @@
 package com.synergym.persistence.entities;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -26,21 +27,29 @@ public class Clases {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idClases;
 
-    @Column(name = "nombre")
+    @Column(name = "nombre", nullable = false)
     private String nombre;
 
-    @Column(name = "fecha_inicio")
+    @Column(name = "fecha_inicio", nullable = false)
     private LocalDate fechaInicio;
 
-    @Column(name = "fecha_fin")
+    @Column(name = "fecha_fin", nullable = false)
     private LocalDate fechaFin;
 
+    @Column(name = "hora_inicio", nullable = false)
+    private LocalTime horaInicio;
+
+    @Column(name = "hora_fin", nullable = false)
+    private LocalTime horaFin;
+
+    @Column(name = "capacidad_maxima", nullable = false)
+    private int capacidadMaxima;
+
     @ManyToOne
-    @JoinColumn(name = "idEntrenador")
-    private Entrenador entrenador;
+    @JoinColumn(name = "id_usuario_entrenador")
+    private Usuario entrenador;
 
     @OneToMany(mappedBy = "clases")
     private List<Inscripcion> inscripciones;
 
-    //Getter and setters
 }

@@ -69,4 +69,10 @@ public class InscripcionController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         }
     }
+
+    // Obtener alumnos de una clase específica
+    @GetMapping("/clase/{idClase}")
+    public ResponseEntity<?> getAlumnosDeClase(@PathVariable int idClase) {
+        return ResponseEntity.ok(this.inscripcion.getAlumnosDeClase(idClase));
+    }
 }

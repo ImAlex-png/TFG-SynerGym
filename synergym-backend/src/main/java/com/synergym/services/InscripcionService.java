@@ -1,24 +1,29 @@
 package com.synergym.services;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.synergym.persistence.entities.Alumno;
+import com.synergym.persistence.entities.Usuario;
 import com.synergym.persistence.entities.Inscripcion;
-
+import com.synergym.persistence.entities.Clases;
 import com.synergym.persistence.entities.enums.Estado;
 import com.synergym.persistence.repositories.InscripcionRepository;
 import com.synergym.services.exceptions.InscripcionNotFoundException;
+import com.synergym.services.exceptions.InscripcionException;
 
 @Service
 public class InscripcionService {
 
     @Autowired
     private InscripcionRepository inscripcionRepository;
+
+    @Autowired
+    private ClaseService claseService;
 
     // Todos las inscripciones
     public List<Inscripcion> findAll() {
@@ -27,25 +32,44 @@ public class InscripcionService {
 
     // Inscripcion por ID
     public Inscripcion findById(int idInscripcion) {
-        if (!this.inscripcionRepository.existsById(idInscripcion)) {
+        Optional<Inscripcion> optionalInscripcion = this.inscripcionRepository.findById(idInscripcion);
+        if (!optionalInscripcion.isPresent()) {
             throw new InscripcionNotFoundException("El ID indicado no existe");
         }
-        return this.inscripcionRepository.findById(idInscripcion).get();
+        return optionalInscripcion.get();
     }
 
     // Crear una inscripcion
     public Inscripcion create(Inscripcion inscripcion) {
-        if (inscripcion.getFechaInscripcion().isBefore(LocalDate.now())) {
-            throw new InscripcionNotFoundException("La fecha de inscripcion no puede ser anterior a la fecha actual");
-        } else {
-            inscripcion.setFechaInscripcion(LocalDate.now());
-            inscripcion.setEstado(Estado.ACEPTADA);
-            inscripcion.setPagado(true);
-            inscripcion.setIdInscripcion(0);
-
-            return this.inscripcionRepository.save(inscripcion);
-
+        // Validar que la clase existe y obtener info
+        Clases clase = claseService.findById(inscripcion.getClases().getIdClases());
+        
+        // Regla: Una clase debe tener un entrenador asignado
+        if (clase.getEntrenador() == null) {
+            throw new InscripcionException("No se puede inscribir en una clase que no tiene entrenador asignado");
         }
+
+        // Regla: No se puede crear una inscripción duplicada
+        if (inscripcionRepository.existsByAlumnoIdAndClasesIdClases(inscripcion.getAlumno().getId(), clase.getIdClases())) {
+            throw new InscripcionException("El alumno ya está inscrito en esta clase");
+        }
+
+        // Regla: Un alumno no puede inscribirse si la clase está llena
+        long inscritos = inscripcionRepository.countByClasesIdClases(clase.getIdClases());
+        if (inscritos >= clase.getCapacidadMaxima()) {
+            throw new InscripcionException("La clase está llena. Capacidad máxima: " + clase.getCapacidadMaxima());
+        }
+
+        if (inscripcion.getFechaInscripcion() != null && inscripcion.getFechaInscripcion().isBefore(LocalDate.now())) {
+            throw new InscripcionNotFoundException("La fecha de inscripcion no puede ser anterior a la fecha actual");
+        }
+        
+        inscripcion.setFechaInscripcion(LocalDate.now());
+        inscripcion.setEstado(Estado.ACEPTADA);
+        inscripcion.setPagado(true);
+        inscripcion.setIdInscripcion(0);
+
+        return this.inscripcionRepository.save(inscripcion);
     }
 
     // Actualizar inscripcion
@@ -66,5 +90,17 @@ public class InscripcionService {
             throw new InscripcionNotFoundException("El ID indicado no existe");
         }
         this.inscripcionRepository.deleteById(idInscripcion);
+    }
+
+    // Obtener alumnos de una clase específica
+    public List<Usuario> getAlumnosDeClase(int idClase) {
+        List<Inscripcion> inscripciones = inscripcionRepository.findByClasesIdClases(idClase);
+        List<Usuario> alumnos = new ArrayList<>();
+        
+        for (Inscripcion i : inscripciones) {
+            alumnos.add(i.getAlumno());
+        }
+        
+        return alumnos;
     }
 }

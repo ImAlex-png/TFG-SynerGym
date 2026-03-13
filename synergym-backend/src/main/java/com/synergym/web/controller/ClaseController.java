@@ -2,7 +2,6 @@ package com.synergym.web.controller;
 
 import java.util.List;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +18,7 @@ import com.synergym.persistence.entities.Clases;
 import com.synergym.services.ClaseService;
 import com.synergym.services.exceptions.ClaseNotFoundException;
 import com.synergym.services.exceptions.ClasesException;
+import com.synergym.web.dto.ClaseCalendarioDTO;
 
 
 @RestController
@@ -27,12 +27,6 @@ public class ClaseController {
     
     @Autowired
     private ClaseService claseService;
-
-    //Cosas que deberia meter
-    // Que las clases se inicien y se cierren
-    //Obtener las clases de un entrenador
-    //Obtener las clases de un usuario
-    //Obtener las clases activas
 
     // Get all clases
     @GetMapping
@@ -81,5 +75,11 @@ public class ClaseController {
         } catch (ClaseNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         }
+    }
+
+    // Calendario para el entrenador
+    @GetMapping("/calendario/{idEntrenador}")
+    public ResponseEntity<List<ClaseCalendarioDTO>> getCalendario(@PathVariable int idEntrenador) {
+        return ResponseEntity.ok(claseService.getCalendarioEntrenador(idEntrenador));
     }
 }

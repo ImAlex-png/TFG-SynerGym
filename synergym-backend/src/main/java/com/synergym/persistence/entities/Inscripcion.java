@@ -39,8 +39,8 @@ public class Inscripcion {
     private LocalDate fechaInscripcion;
 
     @ManyToOne
-    @JoinColumn(name = "idAlumno")
-    private Alumno alumno;
+    @JoinColumn(name = "id_usuario_alumno")
+    private Usuario alumno;
 
     @ManyToOne
     @JoinColumn(name = "idClases")
