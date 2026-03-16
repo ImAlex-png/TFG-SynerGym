@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.synergym.persistence.entities.Inscripcion;
 import com.synergym.services.InscripcionService;
+import com.synergym.services.dto.InscripcionDTO;
+import com.synergym.services.dto.UsuarioDTO;
 import com.synergym.services.exceptions.InscripcionException;
 import com.synergym.services.exceptions.InscripcionNotFoundException;
 
@@ -27,25 +29,27 @@ public class InscripcionController {
     private InscripcionService inscripcion;
 
     @GetMapping
-    public ResponseEntity<List<Inscripcion>> getAllInscripciones() {
+    public ResponseEntity<List<InscripcionDTO>> getAllInscripciones() {
         return ResponseEntity.ok(this.inscripcion.findAll());
     }
 
     @GetMapping("/{idInscripcion}")
     public ResponseEntity<?> findById(@PathVariable int idInscripcion) {
-        try{
-            return ResponseEntity.ok(this.inscripcion.findById(idInscripcion));
-        }catch(Exception e){
+        try {
+            return ResponseEntity.ok(this.inscripcion.findByIdDTO(idInscripcion));
+        } catch (InscripcionNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Inscripcion inscripcion) {
-        try{
+        try {
             return ResponseEntity.status(HttpStatus.CREATED).body(this.inscripcion.create(inscripcion));
-        }catch(Exception e) {
+        } catch (InscripcionException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (InscripcionNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
@@ -72,7 +76,7 @@ public class InscripcionController {
 
     // Obtener alumnos de una clase específica
     @GetMapping("/clase/{idClase}")
-    public ResponseEntity<?> getAlumnosDeClase(@PathVariable int idClase) {
+    public ResponseEntity<List<UsuarioDTO>> getAlumnosDeClase(@PathVariable int idClase) {
         return ResponseEntity.ok(this.inscripcion.getAlumnosDeClase(idClase));
     }
 }

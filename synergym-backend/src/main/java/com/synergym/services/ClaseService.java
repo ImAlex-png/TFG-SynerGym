@@ -11,8 +11,10 @@ import org.springframework.stereotype.Service;
 import com.synergym.persistence.entities.Clases;
 import com.synergym.persistence.repositories.ClasesRepository;
 import com.synergym.services.exceptions.ClaseNotFoundException;
-import com.synergym.services.exceptions.ClasesException;
-import com.synergym.web.dto.ClaseCalendarioDTO;
+import com.synergym.services.exceptions.ClaseException;
+import com.synergym.services.dto.ClaseCalendarioDTO;
+import com.synergym.services.dto.ClaseDTO;
+import com.synergym.services.dto.UsuarioDTO;
 
 @Service
 public class ClaseService {
@@ -20,12 +22,22 @@ public class ClaseService {
     @Autowired
     private ClasesRepository clasesRepository;
 
-    // Find all clases
-    public List<Clases> findAll() {
-        return clasesRepository.findAll();
+    // Obtener todas las clases
+    public List<ClaseDTO> findAll() {
+        List<Clases> clases = clasesRepository.findAll();
+        List<ClaseDTO> dtos = new ArrayList<>();
+        for (Clases c : clases) {
+            dtos.add(convertToDTO(c));
+        }
+        return dtos;
     }
 
-    // Find clase by ID
+    // Buscar una clase por su ID y devolver DTO
+    public ClaseDTO findByIdDTO(int idClase) {
+        return convertToDTO(findById(idClase));
+    }
+
+    // Buscar una clase por su ID (para uso interno)
     public Clases findById(int idClase) {
         Optional<Clases> optionalClase = this.clasesRepository.findById(idClase);
         if (!optionalClase.isPresent()) {
@@ -34,14 +46,14 @@ public class ClaseService {
         return optionalClase.get();
     }
 
-    // Crear una clase
-    public Clases create(Clases clase) {
+    // Crear una nueva clase
+    public ClaseDTO create(Clases clase) {
         if (clase.getFechaFin().isBefore(clase.getFechaInicio())) {
-            throw new ClasesException("La fecha de fin no puede ser anterior a la fecha de inicio");
+            throw new ClaseException("La fecha de fin no puede ser anterior a la fecha de inicio");
         }
 
         if (clase.getHoraFin().isBefore(clase.getHoraInicio())) {
-            throw new ClasesException("La hora de fin no puede ser anterior a la hora de inicio");
+            throw new ClaseException("La hora de fin no puede ser anterior a la hora de inicio");
         }
 
         clase.setIdClases(0);
@@ -53,13 +65,14 @@ public class ClaseService {
 
         // Validar que el nombre no esté vacío
         if (clase.getNombre() == null || clase.getNombre().trim().isEmpty()) {
-            throw new ClasesException("El nombre de la clase es obligatorio");
+            throw new ClaseException("El nombre de la clase es obligatorio");
         }
 
-        return this.clasesRepository.save(clase);
+        Clases saved = this.clasesRepository.save(clase);
+        return convertToDTO(saved);
     }
 
-    // Eliminar una clase por ID
+    // Eliminar una clase por su ID
     public void delete(int idClase) {
         if (!this.clasesRepository.existsById(idClase)) {
             throw new ClaseNotFoundException("La clase con el ID " + idClase + " no existe");
@@ -67,8 +80,8 @@ public class ClaseService {
         this.clasesRepository.deleteById(idClase);
     }
 
-    // Update clase
-    public Clases update(Clases clase, int idClase) {
+    // Actualizar una clase existente
+    public ClaseDTO update(Clases clase, int idClase) {
         Clases claseBD = this.findById(idClase);
         
         claseBD.setNombre(clase.getNombre());
@@ -78,36 +91,62 @@ public class ClaseService {
         claseBD.setCapacidadMaxima(clase.getCapacidadMaxima());
         claseBD.setEntrenador(clase.getEntrenador());
 
-        return this.clasesRepository.save(claseBD);
+        Clases saved = this.clasesRepository.save(claseBD);
+        return convertToDTO(saved);
     }
 
-    // Obtener calendario para un entrenador
+    // Obtener el calendario de clases para un entrenador específico
     public List<ClaseCalendarioDTO> getCalendarioEntrenador(int idEntrenador) {
-        List<Clases> todasLasClases = clasesRepository.findAll();
+        List<Clases> clases = clasesRepository.findByEntrenadorId(idEntrenador);
         List<ClaseCalendarioDTO> calendario = new ArrayList<>();
 
-        for (Clases c : todasLasClases) {
-            if (c.getEntrenador() != null && c.getEntrenador().getId() == idEntrenador) {
-                int numInscritos = 0;
-                if (c.getInscripciones() != null) {
-                    numInscritos = c.getInscripciones().size();
-                }
-
-                ClaseCalendarioDTO dto = new ClaseCalendarioDTO(
-                    c.getIdClases(),
-                    c.getNombre(),
-                    c.getFechaInicio(),
-                    c.getHoraInicio(),
-                    c.getHoraFin(),
-                    numInscritos,
-                    c.getCapacidadMaxima(),
-                    c.getCapacidadMaxima() - numInscritos
-                );
-                calendario.add(dto);
-            }
+        for (Clases c : clases) {
+            int numInscritos = (c.getInscripciones() != null) ? c.getInscripciones().size() : 0;
+            
+            ClaseCalendarioDTO dto = new ClaseCalendarioDTO(
+                c.getIdClases(),
+                c.getNombre(),
+                c.getFechaInicio(),
+                c.getHoraInicio(),
+                c.getHoraFin(),
+                numInscritos,
+                c.getCapacidadMaxima(),
+                c.getCapacidadMaxima() - numInscritos
+            );
+            calendario.add(dto);
         }
 
         return calendario;
+    }
+
+    // Método para convertir de Entidad a DTO (Sin usar programación funcional)
+    public ClaseDTO convertToDTO(Clases c) {
+        if (c == null) return null;
+        
+        UsuarioDTO entrenadorDTO = null;
+        if (c.getEntrenador() != null) {
+            entrenadorDTO = new UsuarioDTO(
+                c.getEntrenador().getId(),
+                c.getEntrenador().getNombre(),
+                c.getEntrenador().getApellidos(),
+                c.getEntrenador().getDni(),
+                c.getEntrenador().getTelefono(),
+                c.getEntrenador().getEmail(),
+                c.getEntrenador().getRol(),
+                c.getEntrenador().isActivo()
+            );
+        }
+        
+        return new ClaseDTO(
+            c.getIdClases(),
+            c.getNombre(),
+            c.getFechaInicio(),
+            c.getFechaFin(),
+            c.getHoraInicio(),
+            c.getHoraFin(),
+            c.getCapacidadMaxima(),
+            entrenadorDTO
+        );
     }
 
 }

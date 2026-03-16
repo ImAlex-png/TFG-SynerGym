@@ -1,10 +1,10 @@
 package com.synergym.services.exceptions;
 
-public class ClasesException extends RuntimeException {
+public class ClaseException extends RuntimeException {
     
     private static final long serialVersionUID = 1L;
 
-    public ClasesException(String message) {
+    public ClaseException(String message) {
         super(message);
     }
 }

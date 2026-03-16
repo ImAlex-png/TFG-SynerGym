@@ -16,9 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.synergym.persistence.entities.Clases;
 import com.synergym.services.ClaseService;
+import com.synergym.services.dto.ClaseDTO;
 import com.synergym.services.exceptions.ClaseNotFoundException;
-import com.synergym.services.exceptions.ClasesException;
-import com.synergym.web.dto.ClaseCalendarioDTO;
+import com.synergym.services.exceptions.ClaseException;
+import com.synergym.services.dto.ClaseCalendarioDTO;
 
 
 @RestController
@@ -28,17 +29,17 @@ public class ClaseController {
     @Autowired
     private ClaseService claseService;
 
-    // Get all clases
+    // Listar todas las clases (vía DTO)
     @GetMapping
-    public ResponseEntity<List<Clases>> list() {
+    public ResponseEntity<List<ClaseDTO>> list() {
         return ResponseEntity.ok(this.claseService.findAll());
     }
 
-    // Get clase by id
+    // Obtener clase por id (vía DTO)
     @GetMapping("/{idClase}")
     public ResponseEntity<?> findById(@PathVariable int idClase) {
-        try{
-            return ResponseEntity.ok(this.claseService.findById(idClase));
+        try {
+            return ResponseEntity.ok(this.claseService.findByIdDTO(idClase));
         }catch(ClaseNotFoundException ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         }
@@ -47,9 +48,9 @@ public class ClaseController {
     //Crear una clase
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Clases clase) {
-       try{
+       try {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.claseService.create(clase));
-       }catch(ClasesException ex) {
+       }catch(ClaseException ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
        }
     }
@@ -57,9 +58,9 @@ public class ClaseController {
     //Update de una clase
     @PutMapping("/{idClase}")
     public ResponseEntity<?> update(@PathVariable int idClase, @RequestBody Clases clase) {
-        try{
+        try {
             return ResponseEntity.ok(this.claseService.update(clase, idClase));
-        }catch(ClasesException ex) {
+        } catch (ClaseException ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
        }catch(ClaseNotFoundException ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());

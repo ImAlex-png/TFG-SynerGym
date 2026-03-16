@@ -1,4 +1,4 @@
-package com.synergym.web.dto;
+package com.synergym.services.dto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
