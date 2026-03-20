@@ -25,6 +25,9 @@ public class InscripcionService {
     @Autowired
     private ClaseService claseService;
 
+    @Autowired
+    private UsuarioService usuarioService;
+
     // Obtener todas las inscripciones
     public List<Inscripcion> findAll() {
         return inscripcionRepository.findAll();
@@ -41,8 +44,10 @@ public class InscripcionService {
 
     // Crear una nueva inscripción
     public Inscripcion create(Inscripcion inscripcion) {
-        // Validar que la clase existe y obtener info
+        // Validar que la clase y el alumno existen
         Clases clase = claseService.findById(inscripcion.getClases().getIdClases());
+        
+        Usuario alumno = usuarioService.findById(inscripcion.getAlumno().getId());
         
         // Regla: Una clase debe tener un entrenador asignado
         if (clase.getEntrenador() == null) {

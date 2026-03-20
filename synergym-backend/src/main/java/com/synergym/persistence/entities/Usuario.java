@@ -31,10 +31,10 @@ public class Usuario {
 
     @Column(length = 50, nullable = false)
     private String nombre;
-    
+
     @Column(length = 100, nullable = false)
     private String apellidos;
-    
+
     @Column(length = 9, unique = true)
     private String dni;
 
@@ -44,7 +44,6 @@ public class Usuario {
     @Column(length = 100, unique = true, nullable = false)
     private String email;
 
-    @JsonIgnore
     @Column(length = 255, nullable = false)
     private String password;
 

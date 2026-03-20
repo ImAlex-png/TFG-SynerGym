@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.dao.DataIntegrityViolationException;
 import com.synergym.persistence.entities.Usuario;
 import com.synergym.persistence.entities.enums.Rol;
 import com.synergym.services.UsuarioService;
@@ -69,6 +70,8 @@ public class UsuarioController {
             return ResponseEntity.noContent().build();
         } catch (UsuarioNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        } catch (DataIntegrityViolationException ex) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("No se puede eliminar el usuario porque tiene inscripciones o clases asociadas.");
         }
     }
 }

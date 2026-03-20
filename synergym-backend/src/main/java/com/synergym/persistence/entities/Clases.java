@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -49,6 +51,7 @@ public class Clases {
     @JoinColumn(name = "id_usuario_entrenador")
     private Usuario entrenador;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "clases")
     private List<Inscripcion> inscripciones;
 
