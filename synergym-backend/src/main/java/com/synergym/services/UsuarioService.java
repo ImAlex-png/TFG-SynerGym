@@ -58,7 +58,12 @@ public class UsuarioService implements UserDetailsService {
         return optionalUsuario.get();
     }
 
-    // Crear un nuevo usuario
+    /**
+     * Creación Administrativa (Desde el BackOffice / Controlador):
+     * Guarda un usuario completo que se recibe por parámetro.
+     * Se usa cuando un Administrador crea manualmente a otro usuario o entrenador.
+     * Confía en todos los datos enviados sin sobreescribir roles.
+     */
     public Usuario create(Usuario usuario) {
         if (usuarioRepository.findByEmail(usuario.getEmail()).isPresent()) {
             throw new UsuarioException("El email ya está registrado");
@@ -66,8 +71,32 @@ public class UsuarioService implements UserDetailsService {
         if (usuario.getDni() != null && usuarioRepository.findByDni(usuario.getDni()).isPresent()) {
             throw new UsuarioException("El DNI ya está registrado");
         }
-        // Aquí se podría añadir hashing de contraseña
         return usuarioRepository.save(usuario);
+    }
+
+    /**
+     * Creación de Auto-Registro (Desde la Web Pública / AuthService):
+     * Filtro de seguridad diseñado para nuevos alumnos que se inscriben solos.
+     * Extrae solo el email y password, encripta la clave mediante BCrypt 
+     * y fuerza el rol ALUMNO para evitar que usuarios maliciosos se otorguen privilegios.
+     */
+    public Usuario create(com.synergym.services.dto.RegisterRequest request) {
+        Usuario nuevoUsuario = new Usuario();
+        String email = request.getEmail() != null ? request.getEmail() : request.getUsername();
+        if (usuarioRepository.findByEmail(email).isPresent()) {
+            throw new UsuarioException("El email ya está registrado");
+        }
+        nuevoUsuario.setEmail(email);
+        
+        org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder encoder = new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
+        nuevoUsuario.setPassword(encoder.encode(request.getPassword1()));
+        
+        nuevoUsuario.setNombre("Nuevo");
+        nuevoUsuario.setApellidos("Usuario");
+        nuevoUsuario.setRol(Rol.ALUMNO);
+        nuevoUsuario.setActivo(true);
+        
+        return usuarioRepository.save(nuevoUsuario);
     }
 
     // Actualizar un usuario existente

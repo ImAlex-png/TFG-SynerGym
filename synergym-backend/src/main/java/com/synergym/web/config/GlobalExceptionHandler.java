@@ -15,14 +15,21 @@ import com.synergym.services.exceptions.InscripcionException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    
-    @ExceptionHandler({UsuarioNotFoundException.class, ClaseNotFoundException.class, InscripcionNotFoundException.class})
+
+    @ExceptionHandler({ UsuarioNotFoundException.class, ClaseNotFoundException.class,
+            InscripcionNotFoundException.class })
     public ResponseEntity<String> handleNotFound(RuntimeException ex) {
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
-	
-	@ExceptionHandler({UsuarioException.class, ClaseException.class, InscripcionException.class, PasswordException.class})
+
+    @ExceptionHandler({ UsuarioException.class, ClaseException.class, InscripcionException.class,
+            PasswordException.class })
     public ResponseEntity<String> handleBadRequest(RuntimeException ex) {
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(org.springframework.security.authentication.BadCredentialsException.class)
+    public ResponseEntity<String> handleBadCredentials(RuntimeException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email o contraseña incorrectos.");
     }
 }

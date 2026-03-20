@@ -38,8 +38,8 @@ public class SecurityConfig {
 					.requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
 					.requestMatchers(HttpMethod.POST, "/auth/refresh").permitAll()
 					
-				.requestMatchers(HttpMethod.GET, "/usuarios").hasAnyRole("ADMIN", "ENTRENADOR")
-				.requestMatchers(HttpMethod.GET, "/clases").hasAnyRole("ADMIN", "ENTRENADOR", "ALUMNO")
+				.requestMatchers(HttpMethod.GET, "/usuarios").hasAnyRole("ADMINISTRADOR", "ENTRENADOR")
+				.requestMatchers(HttpMethod.GET, "/clases").hasAnyRole("ADMINISTRADOR", "ENTRENADOR", "ALUMNO")
 				.anyRequest().authenticated()
 			)
 			.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

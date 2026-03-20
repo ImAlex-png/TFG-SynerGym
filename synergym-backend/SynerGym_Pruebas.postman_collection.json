@@ -6,30 +6,91 @@
   },
   "item": [
     {
+      "name": "00. AUTH",
+      "item": [
+        {
+          "name": "POST Inicio Sesión (ADMIN)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"admin@synergym.com\",\n  \"password\": \"admin123\"\n}" },
+            "url": "http://localhost:8081/auth/login"
+          }
+        },
+        {
+          "name": "POST Inicio Sesión (ENTRENADOR)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"marcos.entrenador@synergym.com\",\n  \"password\": \"vendedor2024\"\n}" },
+            "url": "http://localhost:8081/auth/login"
+          }
+        },
+        {
+          "name": "POST Inicio Sesión (ALUMNO)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"antonio.alumno@gmail.com\",\n  \"password\": \"password123\"\n}" },
+            "url": "http://localhost:8081/auth/login"
+          }
+        },
+        {
+          "name": "POST Registro (Register)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Nuevo\",\n  \"apellidos\": \"Alumno\",\n  \"dni\": \"11223344A\",\n  \"username\": \"nuevo@gmail.com\",\n  \"password1\": \"pass123\",\n  \"password2\": \"pass123\",\n  \"telefono\": \"600111222\"\n}" },
+            "url": "http://localhost:8081/auth/register"
+          }
+        }
+      ]
+    },
+    {
       "name": "0A. CASOS CORRECTOS - USUARIOS",
       "item": [
         {
           "name": "GET Todos los Usuarios",
-          "request": { "method": "GET", "url": "http://localhost:8081/usuarios" }
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:8081/usuarios"
+          }
         },
         {
           "name": "GET Usuarios Activos",
-          "request": { "method": "GET", "url": "http://localhost:8081/usuarios/activos" }
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:8081/usuarios/activos"
+          }
         },
         {
           "name": "GET Usuarios por Rol (ALUMNO)",
-          "request": { "method": "GET", "url": "http://localhost:8081/usuarios/rol/ALUMNO" }
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:8081/usuarios/rol/ALUMNO"
+          }
         },
         {
           "name": "GET Usuario específico (ID 9)",
-          "request": { "method": "GET", "url": "http://localhost:8081/usuarios/9" }
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:8081/usuarios/9"
+          }
         },
         {
           "name": "POST Crear Usuario (ID 9)",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Prueba\",\n  \"apellidos\": \"Final\",\n  \"dni\": \"10000000X\",\n  \"email\": \"prueba@gmail.com\",\n  \"password\": \"pass123\",\n  \"telefono\": \"600999888\",\n  \"rol\": \"ALUMNO\",\n  \"activo\": true\n}" },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Prueba\",\n  \"apellidos\": \"Final\",\n  \"dni\": \"10000000X\",\n  \"email\": \"prueba@gmail.com\",\n  \"password\": \"pass123\",\n  \"telefono\": \"600999888\",\n  \"rol\": \"ALUMNO\",\n  \"activo\": true\n}"
+            },
             "url": "http://localhost:8081/usuarios"
           }
         },
@@ -37,8 +98,16 @@
           "name": "PUT Actualizar Usuario (ID 9)",
           "request": {
             "method": "PUT",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Usuario Actualizado\",\n  \"apellidos\": \"Genial\",\n  \"dni\": \"10000000X\",\n  \"email\": \"prueba@gmail.com\",\n  \"rol\": \"ALUMNO\",\n  \"activo\": true\n}" },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Usuario Actualizado\",\n  \"apellidos\": \"Genial\",\n  \"dni\": \"10000000X\",\n  \"email\": \"prueba@gmail.com\",\n  \"rol\": \"ALUMNO\",\n  \"activo\": true\n}"
+            },
             "url": "http://localhost:8081/usuarios/9"
           }
         }
@@ -49,22 +118,39 @@
       "item": [
         {
           "name": "GET Todas las Clases",
-          "request": { "method": "GET", "url": "http://localhost:8081/clases" }
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:8081/clases"
+          }
         },
         {
           "name": "GET Clase específica (ID 1)",
-          "request": { "method": "GET", "url": "http://localhost:8081/clases/1" }
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:8081/clases/1"
+          }
         },
         {
           "name": "GET Calendario Entrenador (ID 4)",
-          "request": { "method": "GET", "url": "http://localhost:8081/clases/calendario/4" }
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:8081/clases/calendario/4"
+          }
         },
         {
           "name": "POST Crear Clase",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Clase Absoluta\",\n  \"fechaInicio\": \"2026-08-01\",\n  \"fechaFin\": \"2026-08-31\",\n  \"horaInicio\": \"10:00:00\",\n  \"horaFin\": \"11:00:00\",\n  \"capacidadMaxima\": 20,\n  \"entrenador\": { \"id\": 4 }\n}" },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Clase Absoluta\",\n  \"fechaInicio\": \"2026-08-01\",\n  \"fechaFin\": \"2026-08-31\",\n  \"horaInicio\": \"10:00:00\",\n  \"horaFin\": \"11:00:00\",\n  \"capacidadMaxima\": 20,\n  \"entrenador\": { \"id\": 4 }\n}"
+            },
             "url": "http://localhost:8081/clases"
           }
         },
@@ -72,8 +158,16 @@
           "name": "PUT Actualizar Clase (ID 1)",
           "request": {
             "method": "PUT",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Spinning Modificado\",\n  \"fechaInicio\": \"2026-04-01\",\n  \"fechaFin\": \"2026-04-30\",\n  \"horaInicio\": \"08:00:00\",\n  \"horaFin\": \"09:00:00\",\n  \"capacidadMaxima\": 22,\n  \"entrenador\": { \"id\": 4 }\n}" },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Spinning Modificado\",\n  \"fechaInicio\": \"2026-04-01\",\n  \"fechaFin\": \"2026-04-30\",\n  \"horaInicio\": \"08:00:00\",\n  \"horaFin\": \"09:00:00\",\n  \"capacidadMaxima\": 22,\n  \"entrenador\": { \"id\": 4 }\n}"
+            },
             "url": "http://localhost:8081/clases/1"
           }
         }
@@ -84,22 +178,39 @@
       "item": [
         {
           "name": "GET Todas las Inscripciones",
-          "request": { "method": "GET", "url": "http://localhost:8081/inscripcion" }
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:8081/inscripcion"
+          }
         },
         {
           "name": "GET Inscripción específica (ID 1)",
-          "request": { "method": "GET", "url": "http://localhost:8081/inscripcion/1" }
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:8081/inscripcion/1"
+          }
         },
         {
           "name": "GET Alumnos de Clase (ID 1)",
-          "request": { "method": "GET", "url": "http://localhost:8081/inscripcion/clase/1" }
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:8081/inscripcion/clase/1"
+          }
         },
         {
           "name": "POST Inscribir Usuario (Al nuevo ID 9 en Clase 1)",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"alumno\": { \"id\": 9 },\n  \"clases\": { \"idClases\": 1 }\n}" },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"alumno\": { \"id\": 9 },\n  \"clases\": { \"idClases\": 1 }\n}"
+            },
             "url": "http://localhost:8081/inscripcion"
           }
         },
@@ -107,8 +218,16 @@
           "name": "PUT Actualizar Inscripción (Estado de ID 3 a ACEPTADA)",
           "request": {
             "method": "PUT",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"estado\": \"ACEPTADA\",\n  \"pagado\": true,\n  \"fechaInscripcion\": \"2026-03-22\",\n  \"alumno\": { \"id\": 7 },\n  \"clases\": { \"idClases\": 1 }\n}" },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"ACEPTADA\",\n  \"pagado\": true,\n  \"fechaInscripcion\": \"2026-03-22\",\n  \"alumno\": { \"id\": 7 },\n  \"clases\": { \"idClases\": 1 }\n}"
+            },
             "url": "http://localhost:8081/inscripcion/3"
           }
         }
@@ -119,11 +238,17 @@
       "item": [
         {
           "name": "DELETE Inscripción (La nueva ID 12)",
-          "request": { "method": "DELETE", "url": "http://localhost:8081/inscripcion/12" }
+          "request": {
+            "method": "DELETE",
+            "url": "http://localhost:8081/inscripcion/12"
+          }
         },
         {
           "name": "DELETE Usuario sin Inscripciones (ID 9 recién creado)",
-          "request": { "method": "DELETE", "url": "http://localhost:8081/usuarios/9" }
+          "request": {
+            "method": "DELETE",
+            "url": "http://localhost:8081/usuarios/9"
+          }
         }
       ]
     },
@@ -134,14 +259,25 @@
           "name": "1A. Crear Usuario Duplicado (Email ya existe)",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Test\",\n  \"apellidos\": \"Clon\",\n  \"dni\": \"99999999Z\",\n  \"email\": \"admin@synergym.com\",\n  \"password\": \"1234\",\n  \"rol\": \"ALUMNO\",\n  \"activo\": true\n}" },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Test\",\n  \"apellidos\": \"Clon\",\n  \"dni\": \"99999999Z\",\n  \"email\": \"admin@synergym.com\",\n  \"password\": \"1234\",\n  \"rol\": \"ALUMNO\",\n  \"activo\": true\n}"
+            },
             "url": "http://localhost:8081/usuarios"
           }
         },
         {
           "name": "1C. El Fantasma (GET ID Inexistente)",
-          "request": { "method": "GET", "url": "http://localhost:8081/usuarios/9999" }
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:8081/usuarios/9999"
+          }
         }
       ]
     },
@@ -152,8 +288,16 @@
           "name": "2B. Clase Anónima (Nombre Vacío)",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"\",\n  \"fechaInicio\": \"2026-05-01\",\n  \"fechaFin\": \"2026-05-31\",\n  \"horaInicio\": \"10:00:00\",\n  \"horaFin\": \"11:00:00\",\n  \"capacidadMaxima\": 20,\n  \"entrenador\": { \"id\": 4 }\n}" },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"\",\n  \"fechaInicio\": \"2026-05-01\",\n  \"fechaFin\": \"2026-05-31\",\n  \"horaInicio\": \"10:00:00\",\n  \"horaFin\": \"11:00:00\",\n  \"capacidadMaxima\": 20,\n  \"entrenador\": { \"id\": 4 }\n}"
+            },
             "url": "http://localhost:8081/clases"
           }
         }
@@ -166,8 +310,16 @@
           "name": "3B. Overbooking (Llenar Clase Pilates ID 5)",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"alumno\": { \"id\": 8 },\n  \"clases\": { \"idClases\": 5 }\n}" },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"alumno\": { \"id\": 8 },\n  \"clases\": { \"idClases\": 5 }\n}"
+            },
             "url": "http://localhost:8081/inscripcion"
           }
         }

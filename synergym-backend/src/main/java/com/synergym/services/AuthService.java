@@ -8,8 +8,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.synergym.web.config.JwtUtils;
-import com.synergym.persistence.entities.Usuario;
-import com.synergym.persistence.entities.enums.Rol;
 import com.synergym.services.dto.LoginRequest;
 import com.synergym.services.dto.LoginResponse;
 import com.synergym.services.dto.RefreshDTO;
@@ -21,9 +19,6 @@ public class AuthService {
 
     @Autowired
     private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
 
     @Autowired
     private JwtUtils jwtUtil;
@@ -51,17 +46,8 @@ public class AuthService {
             throw new PasswordException("Las contraseñas no coinciden");
         }
 
-        Usuario nuevoUsuario = new Usuario();
-        nuevoUsuario.setEmail(request.getUsername());
-        nuevoUsuario.setPassword(passwordEncoder.encode(request.getPassword1()));
-        nuevoUsuario.setNombre(request.getNombre() != null ? request.getNombre() : "Nuevo");
-        nuevoUsuario.setApellidos(request.getApellidos() != null ? request.getApellidos() : "Usuario");
-        nuevoUsuario.setDni(request.getDni());
-        nuevoUsuario.setTelefono(request.getTelefono());
-        nuevoUsuario.setRol(Rol.ALUMNO); // Por defecto rol de registro
-        nuevoUsuario.setActivo(true);
-
-        this.usuarioService.create(nuevoUsuario);
+        // Delegar la creación del usuario al UsuarioService
+        this.usuarioService.create(request);
 
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword1()));
