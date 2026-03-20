@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.synergym.persistence.entities.Usuario;
-import com.synergym.services.dto.UsuarioDTO;
 import com.synergym.persistence.entities.enums.Rol;
 import com.synergym.services.UsuarioService;
 import com.synergym.services.exceptions.UsuarioException;
@@ -20,24 +19,24 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
     @GetMapping
-    public ResponseEntity<List<UsuarioDTO>> getAll() {
+    public ResponseEntity<List<Usuario>> getAll() {
         return ResponseEntity.ok(usuarioService.findAll());
     }
 
     @GetMapping("/activos")
-    public ResponseEntity<List<UsuarioDTO>> getActivos() {
+    public ResponseEntity<List<Usuario>> getActivos() {
         return ResponseEntity.ok(usuarioService.findAllActivos());
     }
 
     @GetMapping("/rol/{rol}")
-    public ResponseEntity<List<UsuarioDTO>> getByRol(@PathVariable Rol rol) {
+    public ResponseEntity<List<Usuario>> getByRol(@PathVariable Rol rol) {
         return ResponseEntity.ok(usuarioService.findByRol(rol));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable int id) {
         try {
-            return ResponseEntity.ok(usuarioService.findByIdDTO(id));
+            return ResponseEntity.ok(usuarioService.findById(id));
         } catch (UsuarioNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         }

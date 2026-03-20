@@ -15,9 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.synergym.persistence.entities.Inscripcion;
+import com.synergym.persistence.entities.Usuario;
 import com.synergym.services.InscripcionService;
-import com.synergym.services.dto.InscripcionDTO;
-import com.synergym.services.dto.UsuarioDTO;
 import com.synergym.services.exceptions.InscripcionException;
 import com.synergym.services.exceptions.InscripcionNotFoundException;
 
@@ -29,14 +28,14 @@ public class InscripcionController {
     private InscripcionService inscripcion;
 
     @GetMapping
-    public ResponseEntity<List<InscripcionDTO>> getAllInscripciones() {
+    public ResponseEntity<List<Inscripcion>> getAllInscripciones() {
         return ResponseEntity.ok(this.inscripcion.findAll());
     }
 
     @GetMapping("/{idInscripcion}")
     public ResponseEntity<?> findById(@PathVariable int idInscripcion) {
         try {
-            return ResponseEntity.ok(this.inscripcion.findByIdDTO(idInscripcion));
+            return ResponseEntity.ok(this.inscripcion.findById(idInscripcion));
         } catch (InscripcionNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
@@ -76,7 +75,7 @@ public class InscripcionController {
 
     // Obtener alumnos de una clase específica
     @GetMapping("/clase/{idClase}")
-    public ResponseEntity<List<UsuarioDTO>> getAlumnosDeClase(@PathVariable int idClase) {
+    public ResponseEntity<List<Usuario>> getAlumnosDeClase(@PathVariable int idClase) {
         return ResponseEntity.ok(this.inscripcion.getAlumnosDeClase(idClase));
     }
 }

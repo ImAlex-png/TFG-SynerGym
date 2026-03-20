@@ -16,10 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.synergym.persistence.entities.Clases;
 import com.synergym.services.ClaseService;
-import com.synergym.services.dto.ClaseDTO;
 import com.synergym.services.exceptions.ClaseNotFoundException;
 import com.synergym.services.exceptions.ClaseException;
-import com.synergym.services.dto.ClaseCalendarioDTO;
 
 
 @RestController
@@ -29,17 +27,17 @@ public class ClaseController {
     @Autowired
     private ClaseService claseService;
 
-    // Listar todas las clases (vía DTO)
+    // Listar todas las clases
     @GetMapping
-    public ResponseEntity<List<ClaseDTO>> list() {
+    public ResponseEntity<List<Clases>> list() {
         return ResponseEntity.ok(this.claseService.findAll());
     }
 
-    // Obtener clase por id (vía DTO)
+    // Obtener clase por id
     @GetMapping("/{idClase}")
     public ResponseEntity<?> findById(@PathVariable int idClase) {
         try {
-            return ResponseEntity.ok(this.claseService.findByIdDTO(idClase));
+            return ResponseEntity.ok(this.claseService.findById(idClase));
         }catch(ClaseNotFoundException ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         }
@@ -80,7 +78,7 @@ public class ClaseController {
 
     // Calendario para el entrenador
     @GetMapping("/calendario/{idEntrenador}")
-    public ResponseEntity<List<ClaseCalendarioDTO>> getCalendario(@PathVariable int idEntrenador) {
+    public ResponseEntity<List<Clases>> getCalendario(@PathVariable int idEntrenador) {
         return ResponseEntity.ok(claseService.getCalendarioEntrenador(idEntrenador));
     }
 }
