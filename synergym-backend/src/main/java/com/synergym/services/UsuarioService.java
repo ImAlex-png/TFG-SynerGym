@@ -5,6 +5,13 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import java.util.Collections;
+
 import com.synergym.persistence.entities.Usuario;
 import com.synergym.persistence.entities.enums.Rol;
 import com.synergym.persistence.repositories.UsuarioRepository;
@@ -13,7 +20,7 @@ import com.synergym.services.exceptions.UsuarioException;
 
 
 @Service
-public class UsuarioService {
+public class UsuarioService implements UserDetailsService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
@@ -21,6 +28,15 @@ public class UsuarioService {
     // Obtener todos los usuarios
     public List<Usuario> findAll() {
         return usuarioRepository.findAll();
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Usuario usuario = usuarioRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con email: " + username));
+                
+        return new User(usuario.getEmail(), usuario.getPassword(), 
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + usuario.getRol().name())));
     }
 
     // Obtener todos los usuarios activos
