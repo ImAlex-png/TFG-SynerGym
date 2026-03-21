@@ -1,18 +1,18 @@
--- 1. USUARIOS (Contraseñas encriptadas con BCrypt)
+-- 1. USUARIOS (Contraseñas en texto plano para desarrollo)
 -- Admin: admin123
 -- Entrenador: vendedor2024
 -- Alumno: password123
 INSERT INTO usuario (nombre, apellidos, dni, telefono, email, password, rol, activo) VALUES 
-('Admin', 'Principal', '11111111A', '600111222', 'admin@synergym.com', '$2a$10$32rK/Z4F19gqV0oVq73h6.B/QeP1kM66iGz9z8A1Vb23h8x0C8W9e', 'ADMINISTRADOR', true),
+('Admin', 'Principal', '11111111A', '600111222', 'admin@synergym.com', 'admin123', 'ADMINISTRADOR', true),
 
-('Marcos', 'Pérez', '44444444D', '610111222', 'marcos.entrenador@synergym.com', '$2a$10$32rK/Z4F19gqV0oVq73h6.B/QeP1kM66iGz9z8A1Vb23h8x0C8W9e', 'ENTRENADOR', true),
-('Sara', 'López', '55555555E', '610333444', 'sara.entrenador@synergym.com', '$2a$10$32rK/Z4F19gqV0oVq73h6.B/QeP1kM66iGz9z8A1Vb23h8x0C8W9e', 'ENTRENADOR', true),
+('Marcos', 'Pérez', '44444444D', '610111222', 'marcos.entrenador@synergym.com', 'vendedor2024', 'ENTRENADOR', true),
+('Sara', 'López', '55555555E', '610333444', 'sara.entrenador@synergym.com', 'vendedor2024', 'ENTRENADOR', true),
 
-('Antonio', 'Sánchez', '90000001A', '620111001', 'antonio.alumno@gmail.com', '$2a$10$32rK/Z4F19gqV0oVq73h6.B/QeP1kM66iGz9z8A1Vb23h8x0C8W9e', 'ALUMNO', true),
-('María', 'Jiménez', '90000002B', '620111002', 'maria.alumno@gmail.com', '$2a$10$32rK/Z4F19gqV0oVq73h6.B/QeP1kM66iGz9z8A1Vb23h8x0C8W9e', 'ALUMNO', true),
-('Pepe', 'Navarro', '90000003C', '620111003', 'pepe.alumno@gmail.com', '$2a$10$32rK/Z4F19gqV0oVq73h6.B/QeP1kM66iGz9z8A1Vb23h8x0C8W9e', 'ALUMNO', true),
-('Carmen', 'Romero', '90000004D', '620111004', 'carmen.alumno@yahoo.com', '$2a$10$32rK/Z4F19gqV0oVq73h6.B/QeP1kM66iGz9z8A1Vb23h8x0C8W9e', 'ALUMNO', true),
-('Francisco', 'Gil', '90000005E', '620111005', 'francisco.alumno@hotmail.com', '$2a$10$32rK/Z4F19gqV0oVq73h6.B/QeP1kM66iGz9z8A1Vb23h8x0C8W9e', 'ALUMNO', true);
+('Antonio', 'Sánchez', '90000001A', '620111001', 'antonio.alumno@gmail.com', 'password123', 'ALUMNO', true),
+('María', 'Jiménez', '90000002B', '620111002', 'maria.alumno@gmail.com', 'password123', 'ALUMNO', true),
+('Pepe', 'Navarro', '90000003C', '620111003', 'pepe.alumno@gmail.com', 'password123', 'ALUMNO', true),
+('Carmen', 'Romero', '90000004D', '620111004', 'carmen.alumno@yahoo.com', 'password123', 'ALUMNO', true),
+('Francisco', 'Gil', '90000005E', '620111005', 'francisco.alumno@hotmail.com', 'password123', 'ALUMNO', true);
 
 
 -- 2. CLASES 

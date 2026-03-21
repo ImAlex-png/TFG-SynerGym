@@ -18,7 +18,6 @@ import com.synergym.persistence.repositories.UsuarioRepository;
 import com.synergym.services.exceptions.UsuarioNotFoundException;
 import com.synergym.services.exceptions.UsuarioException;
 
-
 @Service
 public class UsuarioService implements UserDetailsService {
 
@@ -34,8 +33,8 @@ public class UsuarioService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Usuario usuario = usuarioRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con email: " + username));
-                
-        return new User(usuario.getEmail(), usuario.getPassword(), 
+
+        return new User(usuario.getEmail(), usuario.getPassword(),
                 Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + usuario.getRol().name())));
     }
 
@@ -58,12 +57,9 @@ public class UsuarioService implements UserDetailsService {
         return optionalUsuario.get();
     }
 
-    /**
-     * Creación Administrativa (Desde el BackOffice / Controlador):
-     * Guarda un usuario completo que se recibe por parámetro.
-     * Se usa cuando un Administrador crea manualmente a otro usuario o entrenador.
-     * Confía en todos los datos enviados sin sobreescribir roles.
-     */
+    // Crea un usuario completo desde el panel de administración usando los datos
+    // recibidos, sin modificar roles, normalmente cuando un administrador añade
+    // manualmente otro usuario o entrenador.
     public Usuario create(Usuario usuario) {
         if (usuarioRepository.findByEmail(usuario.getEmail()).isPresent()) {
             throw new UsuarioException("El email ya está registrado");
@@ -74,12 +70,8 @@ public class UsuarioService implements UserDetailsService {
         return usuarioRepository.save(usuario);
     }
 
-    /**
-     * Creación de Auto-Registro (Desde la Web Pública / AuthService):
-     * Filtro de seguridad diseñado para nuevos alumnos que se inscriben solos.
-     * Extrae solo el email y password, encripta la clave mediante BCrypt 
-     * y fuerza el rol ALUMNO para evitar que usuarios maliciosos se otorguen privilegios.
-     */
+    // Registro automático de usuarios: solo toma email y contraseña, la encripta y
+    // asigna siempre el rol de alumno para evitar privilegios indebidos.
     public Usuario create(com.synergym.services.dto.RegisterRequest request) {
         Usuario nuevoUsuario = new Usuario();
         String email = request.getEmail() != null ? request.getEmail() : request.getUsername();
@@ -87,31 +79,31 @@ public class UsuarioService implements UserDetailsService {
             throw new UsuarioException("El email ya está registrado");
         }
         nuevoUsuario.setEmail(email);
-        
+
         org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder encoder = new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
         nuevoUsuario.setPassword(encoder.encode(request.getPassword1()));
-        
+
         nuevoUsuario.setNombre("Nuevo");
         nuevoUsuario.setApellidos("Usuario");
         nuevoUsuario.setRol(Rol.ALUMNO);
         nuevoUsuario.setActivo(true);
-        
+
         return usuarioRepository.save(nuevoUsuario);
     }
 
     // Actualizar un usuario existente
     public Usuario update(Usuario usuario, int id) {
         Usuario usuarioBD = findById(id);
-        
+
         usuarioBD.setNombre(usuario.getNombre());
         usuarioBD.setApellidos(usuario.getApellidos());
         usuarioBD.setTelefono(usuario.getTelefono());
         usuarioBD.setRol(usuario.getRol());
         usuarioBD.setActivo(usuario.isActivo());
-        
+
         // El email y DNI suelen ser inmutables o requerir validación extra
         if (!usuarioBD.getEmail().equals(usuario.getEmail())) {
-             if (usuarioRepository.findByEmail(usuario.getEmail()).isPresent()) {
+            if (usuarioRepository.findByEmail(usuario.getEmail()).isPresent()) {
                 throw new UsuarioException("El nuevo email ya está en uso");
             }
             usuarioBD.setEmail(usuario.getEmail());
@@ -119,6 +111,7 @@ public class UsuarioService implements UserDetailsService {
 
         return usuarioRepository.save(usuarioBD);
     }
+
     public void deleteById(int id) {
         if (!usuarioRepository.existsById(id)) {
             throw new UsuarioNotFoundException("No se puede eliminar: ID no existe");
