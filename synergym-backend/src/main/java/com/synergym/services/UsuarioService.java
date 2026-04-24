@@ -67,6 +67,10 @@ public class UsuarioService implements UserDetailsService {
         if (usuario.getDni() != null && usuarioRepository.findByDni(usuario.getDni()).isPresent()) {
             throw new UsuarioException("El DNI ya está registrado");
         }
+        
+        org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder encoder = new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
+        usuario.setPassword(encoder.encode(usuario.getPassword()));
+        
         return usuarioRepository.save(usuario);
     }
 

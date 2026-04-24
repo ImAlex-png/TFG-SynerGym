@@ -9,6 +9,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import com.synergym.persistence.entities.Usuario;
 import com.synergym.persistence.entities.enums.Rol;
 import com.synergym.services.UsuarioService;
+import com.synergym.services.dto.RegisterRequest;
 import com.synergym.services.exceptions.UsuarioException;
 import com.synergym.services.exceptions.UsuarioNotFoundException;
 
@@ -46,9 +47,13 @@ public class UsuarioController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Usuario usuario) {
         try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.create(usuario));
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body(usuarioService.create(usuario));
         } catch (UsuarioException ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(ex.getMessage());
         }
     }
 
@@ -71,7 +76,8 @@ public class UsuarioController {
         } catch (UsuarioNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (DataIntegrityViolationException ex) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("No se puede eliminar el usuario porque tiene inscripciones o clases asociadas.");
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("No se puede eliminar el usuario porque tiene inscripciones o clases asociadas.");
         }
     }
 }

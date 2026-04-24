@@ -49,8 +49,9 @@ public class AuthService {
         // Delegar la creación del usuario al UsuarioService
         this.usuarioService.create(request);
 
+        String loginIdentifier = request.getEmail() != null ? request.getEmail() : request.getUsername();
         Authentication authentication = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword1()));
+                .authenticate(new UsernamePasswordAuthenticationToken(loginIdentifier, request.getPassword1()));
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
         String accessToken = jwtUtil.generateAccessToken(userDetails);
