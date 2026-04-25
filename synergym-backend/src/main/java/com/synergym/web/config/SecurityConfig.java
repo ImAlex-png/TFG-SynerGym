@@ -1,4 +1,5 @@
 package com.synergym.web.config;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -23,60 +24,56 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 
 public class SecurityConfig {
-    
-    @Autowired
+
+	@Autowired
 	private JwtFilter jwtFilter;
-	
+
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http
-			.csrf(csrf -> csrf.disable())
-			.cors(cors -> cors.configurationSource(corsConfigurationSource()))
-			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-			.authorizeHttpRequests(auth -> auth
-					.requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-					.requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
-					.requestMatchers(HttpMethod.POST, "/auth/refresh").permitAll()
-					
-				.requestMatchers(HttpMethod.POST, "/usuarios").hasRole("ADMINISTRADOR")
-				.requestMatchers(HttpMethod.GET, "/usuarios").hasAnyRole("ADMINISTRADOR", "ENTRENADOR")
-				.requestMatchers(HttpMethod.GET, "/clases").hasAnyRole("ADMINISTRADOR", "ENTRENADOR", "ALUMNO")
-				.anyRequest().authenticated()
-			)
-			.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-			
+				.csrf(csrf -> csrf.disable())
+				.cors(cors -> cors.configurationSource(corsConfigurationSource()))
+				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.authorizeHttpRequests(auth -> auth
+						.requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+						.requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
+						.requestMatchers(HttpMethod.POST, "/auth/refresh").permitAll()
+
+						.requestMatchers(HttpMethod.POST, "/usuarios").hasRole("ADMINISTRADOR")
+						.requestMatchers(HttpMethod.GET, "/usuarios").hasAnyRole("ADMINISTRADOR", "ENTRENADOR")
+						.requestMatchers(HttpMethod.GET, "/clases").hasAnyRole("ADMINISTRADOR", "ENTRENADOR", "ALUMNO")
+						.anyRequest().authenticated())
+				.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+
 		return http.build();
 	}
-	
-	
+
 	@Bean
 	PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-	
-	
-	
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        // Divide la cadena por comas y elimina espacios en blanco
-//        List<String> allowedOrigins = Arrays.stream(frontendUrls.split(","))
-//                                            .map(String::trim)
-//                                            .toList();
-        List<String> allowedOrigins = Arrays.asList("http://localhost:4200");
-        configuration.setAllowedOrigins(allowedOrigins);
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept"));
-        configuration.setExposedHeaders(List.of("Authorization"));
-        configuration.setAllowCredentials(true);
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
-    
-    @Bean
-    AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-        return configuration.getAuthenticationManager();
-    }	
+	@Bean
+	CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration configuration = new CorsConfiguration();
+		// Divide la cadena por comas y elimina espacios en blanco
+		// List<String> allowedOrigins = Arrays.stream(frontendUrls.split(","))
+		// .map(String::trim)
+		// .toList();
+		List<String> allowedOrigins = Arrays.asList("http://localhost:4200");
+		configuration.setAllowedOrigins(allowedOrigins);
+		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+		configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept"));
+		configuration.setExposedHeaders(List.of("Authorization"));
+		configuration.setAllowCredentials(true);
+
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", configuration);
+		return source;
+	}
+
+	@Bean
+	AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+		return configuration.getAuthenticationManager();
+	}
 }
