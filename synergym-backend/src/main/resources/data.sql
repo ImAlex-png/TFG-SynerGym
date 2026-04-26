@@ -3,7 +3,7 @@
 -- Entrenador: vendedor2024
 -- Alumno: password123
 INSERT INTO usuario (nombre, apellidos, dni, telefono, email, password, rol, activo) VALUES 
-('Admin', 'Principal', '11111111A', '600111222', 'admin@synergym.com', 'admin123', 'ADMINISTRADOR', true),
+('Admin', 'Principal', '11111111A', '600111222', 'admin@synergym.com', '1234', 'ADMINISTRADOR', true),
 
 ('Marcos', 'Pérez', '44444444D', '610111222', 'marcos.entrenador@synergym.com', 'vendedor2024', 'ENTRENADOR', true),
 ('Sara', 'López', '55555555E', '610333444', 'sara.entrenador@synergym.com', 'vendedor2024', 'ENTRENADOR', true),

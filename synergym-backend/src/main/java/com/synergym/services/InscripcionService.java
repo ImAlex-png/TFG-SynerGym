@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.synergym.persistence.entities.Usuario;
@@ -28,18 +30,43 @@ public class InscripcionService {
     @Autowired
     private UsuarioService usuarioService;
 
-    // Obtener todas las inscripciones
+    // Obtener las inscripciones según el rol del usuario
     public List<Inscripcion> findAll() {
-        return inscripcionRepository.findAll();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String usernameActual = auth.getName();
+        
+        boolean isAdmin = auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMINISTRADOR"));
+        
+        if (isAdmin) {
+            return inscripcionRepository.findAll();
+        } else {
+            // Si no es admin, solo devolvemos sus propias inscripciones
+            return inscripcionRepository.findByAlumnoEmail(usernameActual);
+        }
     }
 
-    // Buscar una inscripción por su ID
+    // Buscar una inscripción por su ID (con control de acceso)
     public Inscripcion findById(int idInscripcion) {
         Optional<Inscripcion> optionalInscripcion = this.inscripcionRepository.findById(idInscripcion);
         if (!optionalInscripcion.isPresent()) {
             throw new InscripcionNotFoundException("El ID indicado no existe");
         }
-        return optionalInscripcion.get();
+        
+        Inscripcion inscripcion = optionalInscripcion.get();
+        
+        // --- Seguridad: Solo el dueño o un admin puede ver el detalle ---
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String usernameActual = auth.getName();
+        boolean isAdmin = auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMINISTRADOR"));
+        
+        if (!isAdmin && !inscripcion.getAlumno().getEmail().equals(usernameActual)) {
+            throw new InscripcionException("No tienes permiso para ver esta inscripción");
+        }
+        // ----------------------------------------------------------------
+        
+        return inscripcion;
     }
 
     // Crear una nueva inscripción
@@ -48,6 +75,17 @@ public class InscripcionService {
         Clases clase = claseService.findById(inscripcion.getClases().getIdClases());
         
         Usuario alumno = usuarioService.findById(inscripcion.getAlumno().getId());
+        
+        // --- Seguridad: Solo el propio usuario o un admin puede inscribirse ---
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String usernameActual = auth.getName();
+        boolean isAdmin = auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMINISTRADOR"));
+        
+        if (!isAdmin && !alumno.getEmail().equals(usernameActual)) {
+            throw new InscripcionException("No tienes permiso para inscribir a otro usuario");
+        }
+        // ----------------------------------------------------------------------
         
         // Regla: Una clase debe tener un entrenador asignado
         if (clase.getEntrenador() == null) {
@@ -93,9 +131,19 @@ public class InscripcionService {
 
     // Eliminar una inscripción por su ID
     public void deleteById(int idInscripcion) {
-        if (!this.inscripcionRepository.existsById(idInscripcion)) {
-            throw new InscripcionNotFoundException("El ID indicado no existe");
+        Inscripcion inscripcion = this.findById(idInscripcion);
+
+        // --- Seguridad: Solo el dueño de la inscripción o un admin puede borrarla ---
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String usernameActual = auth.getName();
+        boolean isAdmin = auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMINISTRADOR"));
+
+        if (!isAdmin && !inscripcion.getAlumno().getEmail().equals(usernameActual)) {
+            throw new InscripcionException("No tienes permiso para borrar una inscripción que no te pertenece");
         }
+        // -----------------------------------------------------------------------------
+
         this.inscripcionRepository.deleteById(idInscripcion);
     }
 

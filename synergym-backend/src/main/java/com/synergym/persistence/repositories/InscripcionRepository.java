@@ -11,4 +11,6 @@ public interface InscripcionRepository extends JpaRepository<Inscripcion, Intege
     long countByClasesIdClases(int claseId);
 
     List<Inscripcion> findByClasesIdClases(int claseId);
+    
+    List<Inscripcion> findByAlumnoEmail(String email);
 }

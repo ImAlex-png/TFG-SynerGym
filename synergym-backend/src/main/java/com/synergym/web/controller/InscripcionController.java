@@ -38,6 +38,8 @@ public class InscripcionController {
             return ResponseEntity.ok(this.inscripcion.findById(idInscripcion));
         } catch (InscripcionNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (InscripcionException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         }
     }
 
@@ -68,8 +70,10 @@ public class InscripcionController {
         try{
             this.inscripcion.deleteById(idInscripcion);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        }catch(InscripcionNotFoundException ex){
+        } catch (InscripcionNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        } catch (InscripcionException ex) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
         }
     }
 
