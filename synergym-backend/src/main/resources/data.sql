@@ -3,16 +3,16 @@
 -- Entrenador: vendedor2024
 -- Alumno: password123
 INSERT INTO usuario (nombre, apellidos, dni, telefono, email, password, rol, activo) VALUES 
-('Admin', 'Principal', '11111111A', '600111222', 'admin@synergym.com', '1234', 'ADMINISTRADOR', true),
+('Admin', 'Principal', '11111111A', '600111222', 'admin@synergym.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.TVuHOn2', 'ADMINISTRADOR', true),
 
-('Marcos', 'Pérez', '44444444D', '610111222', 'marcos.entrenador@synergym.com', 'vendedor2024', 'ENTRENADOR', true),
-('Sara', 'López', '55555555E', '610333444', 'sara.entrenador@synergym.com', 'vendedor2024', 'ENTRENADOR', true),
+('Marcos', 'Pérez', '44444444D', '610111222', 'marcos.entrenador@synergym.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.TVuHOn2', 'ENTRENADOR', true),
+('Sara', 'López', '55555555E', '610333444', 'sara.entrenador@synergym.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.TVuHOn2', 'ENTRENADOR', true),
 
-('Antonio', 'Sánchez', '90000001A', '620111001', 'antonio.alumno@gmail.com', 'password123', 'ALUMNO', true),
-('María', 'Jiménez', '90000002B', '620111002', 'maria.alumno@gmail.com', 'password123', 'ALUMNO', true),
-('Pepe', 'Navarro', '90000003C', '620111003', 'pepe.alumno@gmail.com', 'password123', 'ALUMNO', true),
-('Carmen', 'Romero', '90000004D', '620111004', 'carmen.alumno@yahoo.com', 'password123', 'ALUMNO', true),
-('Francisco', 'Gil', '90000005E', '620111005', 'francisco.alumno@hotmail.com', 'password123', 'ALUMNO', true);
+('Antonio', 'Sánchez', '90000001A', '620111001', 'antonio.alumno@gmail.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.TVuHOn2', 'ALUMNO', true),
+('María', 'Jiménez', '90000002B', '620111002', 'maria.alumno@gmail.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.TVuHOn2', 'ALUMNO', true),
+('Pepe', 'Navarro', '90000003C', '620111003', 'pepe.alumno@gmail.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.TVuHOn2', 'ALUMNO', true),
+('Carmen', 'Romero', '90000004D', '620111004', 'carmen.alumno@yahoo.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.TVuHOn2', 'ALUMNO', true),
+('Francisco', 'Gil', '90000005E', '620111005', 'francisco.alumno@hotmail.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.TVuHOn2', 'ALUMNO', true);
 
 
 -- 2. CLASES 
@@ -47,3 +47,26 @@ INSERT INTO inscripcion (estado, pagado, fecha_inscripcion, id_usuario_alumno, i
 ('EN_PROCESO', false, '2026-03-16', 7, 4),
 
 ('ACEPTADA', true, '2026-03-18', 6, 5);
+
+-- 4. CONVERSACIONES (Chats iniciales)
+INSERT INTO conversacion (nombre, tipo, fecha_creacion) VALUES 
+(NULL, 'PRIVADA', CURRENT_TIMESTAMP),           -- ID 1: Admin <-> Marcos
+(NULL, 'PRIVADA', CURRENT_TIMESTAMP),           -- ID 2: Sara <-> María
+('Grupo CrossFit Mañana', 'GRUPAL', CURRENT_TIMESTAMP); -- ID 3: Marcos + Alumnos
+
+-- 5. PARTICIPANTES (Asociar usuarios a los chats)
+INSERT INTO participante (id_conversacion, id_usuario) VALUES 
+(1, 1), (1, 2), -- Admin y Marcos en Chat 1
+(2, 3), (2, 5), -- Sara y María en Chat 2
+(3, 2), (3, 4), (3, 6), (3, 8); -- Marcos, Antonio, Pepe y Francisco en Chat 3
+
+-- 6. MENSAJES (Historial inicial)
+INSERT INTO mensaje (contenido, fecha_envio, id_usuario_emisor, id_conversacion) VALUES 
+('Hola Marcos, ¿cómo van las clases de hoy?', CURRENT_TIMESTAMP, 1, 1),
+('Todo bien, Admin. El grupo de Spinning está lleno.', CURRENT_TIMESTAMP, 2, 1),
+
+('María, recuerda traer la esterilla para Yoga.', CURRENT_TIMESTAMP, 3, 2),
+('¡Gracias Sara! Allí estaré.', CURRENT_TIMESTAMP, 5, 2),
+
+('Bienvenidos al grupo de CrossFit básico. ¡Mañana a tope!', CURRENT_TIMESTAMP, 2, 3),
+('¿A qué hora empezamos?', CURRENT_TIMESTAMP, 4, 3);

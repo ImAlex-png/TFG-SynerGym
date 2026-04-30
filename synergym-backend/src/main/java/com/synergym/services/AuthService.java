@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -46,22 +47,28 @@ public class AuthService {
             throw new PasswordException("Las contraseñas no coinciden");
         }
 
-        // Delegar la creación del usuario al UsuarioService
+        // 1. Crear el usuario
         this.usuarioService.create(request);
 
-        String loginIdentifier = request.getEmail() != null ? request.getEmail() : request.getUsername();
-        Authentication authentication = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(loginIdentifier, request.getPassword1()));
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        // 2. Intentar login automático
+        try {
+            String loginIdentifier = request.getEmail() != null ? request.getEmail() : request.getUsername();
+            Authentication authentication = authenticationManager
+                    .authenticate(new UsernamePasswordAuthenticationToken(loginIdentifier, request.getPassword1()));
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
-        String accessToken = jwtUtil.generateAccessToken(userDetails);
-        String refreshToken = jwtUtil.generateRefreshToken(userDetails);
+            String accessToken = jwtUtil.generateAccessToken(userDetails);
+            String refreshToken = jwtUtil.generateRefreshToken(userDetails);
 
-        LoginResponse response = new LoginResponse();
-        response.setAccess(accessToken);
-        response.setRefresh(refreshToken);
-
-        return response;
+            LoginResponse response = new LoginResponse();
+            response.setAccess(accessToken);
+            response.setRefresh(refreshToken);
+            return response;
+            
+        } catch (AuthenticationException e) {
+            // Si el login automático falla, devolvemos una respuesta vacía pero NO lanzamos error
+            return new LoginResponse();
+        }
     }
 
     public LoginResponse refresh(RefreshDTO dto) {
@@ -74,5 +81,4 @@ public class AuthService {
 
         return response;
     }
-
 }

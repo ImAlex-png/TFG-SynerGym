@@ -1,0 +1,15 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import 'tailwindcss';
+
+@theme {
+  --color-primary: #6d28d9;
+  --color-secondary: #ef4444;
+  --color-accent: #dc2626;
+  --color-bg-dark: #000000;
+  --color-bg-card: #0f172a;
+}
+
+body {
+  @apply bg-bg-dark text-white font-sans;
+}
