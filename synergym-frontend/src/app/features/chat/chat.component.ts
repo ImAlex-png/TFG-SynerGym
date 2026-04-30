@@ -11,9 +11,12 @@ import { Usuario } from '../../core/models/usuario.model';
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div class="h-[calc(100vh-120px)] flex bg-bg-card rounded-2xl border border-white/10 overflow-hidden shadow-2xl">
+    <div class="h-[calc(100vh-120px)] flex bg-bg-card rounded-2xl border border-white/10 overflow-hidden shadow-2xl relative">
       <!-- Sidebar de Chats -->
-      <div class="w-80 border-r border-white/10 flex flex-col bg-black/20">
+      <div 
+        [ngClass]="{'hidden md:flex': selectedConv() !== null, 'flex': selectedConv() === null}"
+        class="w-full md:w-80 md:border-r border-white/10 flex-col bg-black/20 absolute md:relative z-10 md:z-auto h-full"
+      >
         <div class="p-4 border-b border-white/10 flex justify-between items-center">
           <h2 class="text-xl font-black italic text-white uppercase tracking-tighter">Mensajes</h2>
           <button (click)="toggleUserList()" class="p-2 hover:bg-primary/20 rounded-full text-primary transition-all">
@@ -78,10 +81,21 @@ import { Usuario } from '../../core/models/usuario.model';
       </div>
 
       <!-- Área de Chat -->
-      <div class="flex-1 flex flex-col bg-black/40 relative">
+      <div 
+        [ngClass]="{'flex': selectedConv() !== null, 'hidden md:flex': selectedConv() === null}"
+        class="flex-1 flex-col bg-black/40 relative w-full"
+      >
         @if (selectedConv()) {
           <div class="p-4 border-b border-white/10 bg-white/5 backdrop-blur-md flex items-center justify-between">
             <div class="flex items-center space-x-4">
+              <button 
+                (click)="selectedConv.set(null)" 
+                class="md:hidden p-2 -ml-2 text-gray-400 hover:text-white rounded-lg hover:bg-white/10 transition-colors"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
               <div class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center text-primary font-bold">
                 {{ getChatInitial(selectedConv()!) }}
               </div>

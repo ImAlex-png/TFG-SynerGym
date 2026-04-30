@@ -11,37 +11,38 @@ import { ClaseService, Clase } from '../../core/services/clase.service';
     <div class="max-w-[1600px] mx-auto space-y-10 animate-fadeIn p-4 md:p-8">
       
       <!-- HERO HEADER -->
-      <header class="relative overflow-hidden bg-gradient-to-br from-bg-card to-black p-12 rounded-[40px] border border-white/5 shadow-2xl">
-        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] -mr-40 -mt-40 animate-pulse"></div>
-        <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
+      <header class="relative overflow-hidden bg-gradient-to-br from-bg-card to-black p-6 md:p-12 rounded-[30px] md:rounded-[40px] border border-white/5 shadow-2xl">
+        <div class="absolute top-0 right-0 w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-primary/5 rounded-full blur-[80px] md:blur-[120px] -mr-20 md:-mr-40 -mt-20 md:-mt-40 animate-pulse"></div>
+        <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6 md:gap-8">
           <div>
-            <h1 class="text-5xl font-black italic tracking-tighter text-white uppercase leading-none">
-              BIENVENIDO, <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">{{ authService.currentUser()?.nombre }}</span>
+            <h1 class="text-3xl md:text-5xl font-black italic tracking-tighter text-white uppercase leading-none text-center md:text-left">
+              BIENVENIDO, <br class="md:hidden" />
+              <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">{{ authService.currentUser()?.nombre }}</span>
             </h1>
-            <p class="text-gray-400 mt-4 text-lg font-medium tracking-wide max-w-xl">
+            <p class="text-gray-400 mt-3 md:mt-4 text-sm md:text-lg font-medium tracking-wide max-w-xl text-center md:text-left">
               Tu progreso no se detiene. Aquí tienes tu planificación estratégica para esta semana.
             </p>
           </div>
-          <div class="flex gap-4">
-             <div class="bg-white/5 backdrop-blur-md border border-white/10 p-6 rounded-3xl text-center min-w-[140px]">
-                <p class="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-1">Total Clases</p>
-                <p class="text-3xl font-black text-white italic">{{ clases().length }}</p>
+          <div class="flex justify-center md:justify-end gap-4 w-full md:w-auto">
+             <div class="bg-white/5 backdrop-blur-md border border-white/10 p-4 md:p-6 rounded-[20px] md:rounded-3xl text-center min-w-[120px] md:min-w-[140px]">
+                <p class="text-[9px] md:text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-1">Total Clases</p>
+                <p class="text-2xl md:text-3xl font-black text-white italic">{{ clases().length }}</p>
              </div>
           </div>
         </div>
       </header>
 
       <!-- CALENDAR SECTION -->
-      <section class="bg-bg-card/50 backdrop-blur-xl rounded-[40px] border border-white/5 overflow-hidden shadow-2xl">
+      <section class="bg-bg-card/50 backdrop-blur-xl rounded-[30px] md:rounded-[40px] border border-white/5 overflow-hidden shadow-2xl">
         
         <!-- CALENDAR NAVIGATION -->
-        <div class="p-8 border-b border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 bg-white/[0.02]">
-          <div class="flex items-center gap-6">
-            <h2 class="text-2xl font-black italic text-white uppercase tracking-tighter">Planificación</h2>
-            <div class="h-8 w-[1px] bg-white/10 hidden md:block"></div>
-            <div class="flex items-center gap-3">
-              <span class="w-3 h-3 rounded-full bg-green-500 shadow-[0_0_15px_rgba(34,197,94,0.5)]"></span>
-              <span class="text-xs font-black text-white uppercase tracking-[0.3em]">{{ currentMonthName }} {{ currentYear }}</span>
+        <div class="p-6 md:p-8 border-b border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6 bg-white/[0.02]">
+          <div class="flex items-center gap-4 md:gap-6">
+            <h2 class="text-xl md:text-2xl font-black italic text-white uppercase tracking-tighter">Planificación</h2>
+            <div class="h-6 md:h-8 w-[1px] bg-white/10 hidden sm:block"></div>
+            <div class="flex items-center gap-2 md:gap-3">
+              <span class="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-green-500 shadow-[0_0_15px_rgba(34,197,94,0.5)]"></span>
+              <span class="text-[10px] md:text-xs font-black text-white uppercase tracking-[0.2em] md:tracking-[0.3em]">{{ currentMonthName }} {{ currentYear }}</span>
             </div>
           </div>
           
