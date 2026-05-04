@@ -64,47 +64,47 @@ import { ClaseService, Clase } from '../../core/services/clase.service';
         </div>
 
         <!-- CALENDAR GRID -->
-        <div class="grid grid-cols-1 md:grid-cols-7 divide-x divide-white/5 bg-black/20 overflow-x-auto">
+        <div class="flex divide-x divide-white/5 bg-black/20 overflow-x-auto custom-scrollbar min-h-[700px]">
           @for (day of weekDays; track day.date.getTime()) {
-            <div class="min-w-[200px] flex flex-col group/day transition-colors" [class.bg-primary/[0.03]]="isToday(day.date)">
+            <div class="flex-1 min-w-[220px] sm:min-w-[280px] md:min-w-[200px] lg:min-w-0 flex flex-col group/day transition-colors" [class.bg-primary/[0.03]]="isToday(day.date)">
               
-              <div class="p-6 text-center border-b border-white/5 bg-white/[0.01] group-hover/day:bg-white/[0.03] transition-colors">
-                <p class="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] mb-2 group-hover/day:text-primary transition-colors">
+              <div class="p-4 md:p-6 text-center border-b border-white/5 bg-white/[0.01] group-hover/day:bg-white/[0.03] transition-colors">
+                <p class="text-[9px] md:text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] mb-2 group-hover/day:text-primary transition-colors">
                   {{ day.name }}
                 </p>
-                <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl transition-all"
+                <div class="inline-flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl transition-all"
                      [class.bg-primary]="isToday(day.date)"
                      [class.text-white]="isToday(day.date)"
                      [class.text-white/40]="!isToday(day.date)">
-                  <span class="text-2xl font-black italic">{{ day.date | date:'dd' }}</span>
+                  <span class="text-xl md:text-2xl font-black italic">{{ day.date | date:'dd' }}</span>
                 </div>
               </div>
 
-              <div class="flex-1 p-4 space-y-4 relative min-h-[600px] bg-gradient-to-b from-transparent to-black/20">
+              <div class="flex-1 p-3 md:p-5 space-y-4 md:space-y-6 relative bg-gradient-to-b from-transparent to-black/20">
                 @for (clase of getClasesForDay(day.date); track (clase.idClases || clase.id)) {
                   <div 
                     (click)="showClaseInfo(clase)"
-                    class="group relative p-5 rounded-[28px] bg-white/[0.03] border border-white/5 hover:border-primary/40 transition-all cursor-pointer overflow-hidden shadow-xl backdrop-blur-md hover:-translate-y-2 active:scale-95"
+                    class="group relative p-4 md:p-5 rounded-2xl md:rounded-[28px] bg-white/[0.03] border border-white/5 hover:border-primary/40 transition-all cursor-pointer overflow-hidden shadow-xl backdrop-blur-md hover:-translate-y-2 active:scale-95"
                   >
-                    <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.8)]"></div>
+                    <div class="absolute left-0 top-0 bottom-0 w-1 md:w-1.5 bg-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.8)]"></div>
                     
-                    <div class="flex flex-col gap-3">
+                    <div class="flex flex-col gap-2 md:gap-3">
                       <div class="flex items-center justify-between">
-                        <span class="px-3 py-1 bg-primary/10 rounded-full text-[9px] font-black text-primary uppercase tracking-widest border border-primary/20">
+                        <span class="px-2 md:px-3 py-0.5 md:py-1 bg-primary/10 rounded-full text-[8px] md:text-[9px] font-black text-primary uppercase tracking-widest border border-primary/20">
                           {{ (clase.horaInicio || '') | slice:0:5 }}
                         </span>
-                        <span class="text-[9px] font-bold text-gray-400 uppercase tracking-widest">
-                           {{ clase.alumnosInscritos || 0 }} / {{ clase.capacidadMaxima }} Plazas
+                        <span class="text-[8px] md:text-[9px] font-bold text-gray-400 uppercase tracking-widest">
+                           {{ clase.alumnosInscritos || 0 }}/{{ clase.capacidadMaxima }}
                         </span>
                       </div>
                       
-                      <h3 class="text-base font-black text-white italic uppercase tracking-tighter leading-tight group-hover:text-primary transition-colors">
+                      <h3 class="text-sm md:text-base font-black text-white italic uppercase tracking-tighter leading-tight group-hover:text-primary transition-colors line-clamp-2">
                         {{ clase.nombre }}
                       </h3>
 
-                      <div class="flex items-center justify-between mt-2">
-                         <p class="text-[8px] text-gray-500 uppercase font-black">Click para info</p>
-                         <div class="w-8 h-8 rounded-xl bg-white/5 flex items-center justify-center text-sm group-hover:bg-primary transition-all">
+                      <div class="flex items-center justify-between mt-1 md:mt-2">
+                         <p class="text-[7px] md:text-[8px] text-gray-500 uppercase font-black">Detalles</p>
+                         <div class="w-6 h-6 md:w-8 md:h-8 rounded-lg md:rounded-xl bg-white/5 flex items-center justify-center text-xs md:text-sm group-hover:bg-primary transition-all">
                           ℹ️
                         </div>
                       </div>

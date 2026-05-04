@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { MessagingService } from '../../../core/services/messaging.service';
 import { Rol } from '../../../core/models/usuario.model';
+import { UiService } from '../../../core/services/ui.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -17,17 +18,17 @@ import { Rol } from '../../../core/models/usuario.model';
       </div>
 
       <nav class="flex-1 px-4 space-y-2 mt-4">
-        <a routerLink="/dashboard" routerLinkActive="bg-primary/20 text-primary border-r-4 border-primary" class="flex items-center space-x-3 p-3 rounded-lg text-gray-400 hover:bg-white/5 hover:text-white transition-all">
+        <a (click)="uiService.closeSidebar()" routerLink="/dashboard" routerLinkActive="bg-primary/20 text-primary border-r-4 border-primary" class="flex items-center space-x-3 p-3 rounded-lg text-gray-400 hover:bg-white/5 hover:text-white transition-all">
           <span>📊 Dashboard</span>
         </a>
 
         <!-- Admin Only -->
         @if (authService.hasRole(Rol.ADMINISTRADOR)) {
           <div class="pt-4 pb-2 text-xs font-semibold text-gray-500 uppercase px-3">Gestión Admin</div>
-          <a routerLink="/admin/usuarios" routerLinkActive="bg-primary/20 text-primary border-r-4 border-primary" class="flex items-center space-x-3 p-3 rounded-lg text-gray-400 hover:bg-white/5 hover:text-white transition-all">
+          <a (click)="uiService.closeSidebar()" routerLink="/admin/usuarios" routerLinkActive="bg-primary/20 text-primary border-r-4 border-primary" class="flex items-center space-x-3 p-3 rounded-lg text-gray-400 hover:bg-white/5 hover:text-white transition-all">
             <span>👥 Usuarios</span>
           </a>
-          <a routerLink="/admin/clases" routerLinkActive="bg-primary/20 text-primary border-r-4 border-primary" class="flex items-center space-x-3 p-3 rounded-lg text-gray-400 hover:bg-white/5 hover:text-white transition-all">
+          <a (click)="uiService.closeSidebar()" routerLink="/admin/clases" routerLinkActive="bg-primary/20 text-primary border-r-4 border-primary" class="flex items-center space-x-3 p-3 rounded-lg text-gray-400 hover:bg-white/5 hover:text-white transition-all">
             <span>🏋️ Clases</span>
           </a>
         }
@@ -35,7 +36,7 @@ import { Rol } from '../../../core/models/usuario.model';
         <!-- Entrenador Only -->
         @if (authService.hasRole(Rol.ENTRENADOR)) {
           <div class="pt-4 pb-2 text-xs font-semibold text-gray-500 uppercase px-3">Entrenador</div>
-          <a routerLink="/entrenador/mis-clases" routerLinkActive="bg-primary/20 text-primary border-r-4 border-primary" class="flex items-center space-x-3 p-3 rounded-lg text-gray-400 hover:bg-white/5 hover:text-white transition-all">
+          <a (click)="uiService.closeSidebar()" routerLink="/entrenador/mis-clases" routerLinkActive="bg-primary/20 text-primary border-r-4 border-primary" class="flex items-center space-x-3 p-3 rounded-lg text-gray-400 hover:bg-white/5 hover:text-white transition-all">
             <span>📅 Mis Clases</span>
           </a>
         }
@@ -43,16 +44,16 @@ import { Rol } from '../../../core/models/usuario.model';
         <!-- Alumno Only -->
         @if (authService.hasRole(Rol.ALUMNO)) {
           <div class="pt-4 pb-2 text-xs font-semibold text-gray-500 uppercase px-3">Alumno</div>
-          <a routerLink="/alumno/clases" routerLinkActive="bg-primary/20 text-primary border-r-4 border-primary" class="flex items-center space-x-3 p-3 rounded-lg text-gray-400 hover:bg-white/5 hover:text-white transition-all">
+          <a (click)="uiService.closeSidebar()" routerLink="/alumno/clases" routerLinkActive="bg-primary/20 text-primary border-r-4 border-primary" class="flex items-center space-x-3 p-3 rounded-lg text-gray-400 hover:bg-white/5 hover:text-white transition-all">
             <span>🏋️ Ver Clases</span>
           </a>
-          <a routerLink="/alumno/mis-inscripciones" routerLinkActive="bg-primary/20 text-primary border-r-4 border-primary" class="flex items-center space-x-3 p-3 rounded-lg text-gray-400 hover:bg-white/5 hover:text-white transition-all">
+          <a (click)="uiService.closeSidebar()" routerLink="/alumno/mis-inscripciones" routerLinkActive="bg-primary/20 text-primary border-r-4 border-primary" class="flex items-center space-x-3 p-3 rounded-lg text-gray-400 hover:bg-white/5 hover:text-white transition-all">
             <span>📝 Mis Inscripciones</span>
           </a>
         }
 
         <div class="pt-4 pb-2 text-xs font-semibold text-gray-500 uppercase px-3">Comunidad</div>
-        <a routerLink="/chat" routerLinkActive="bg-primary/20 text-primary border-r-4 border-primary" class="flex items-center justify-between p-3 rounded-lg text-gray-400 hover:bg-white/5 hover:text-white transition-all group">
+        <a (click)="uiService.closeSidebar()" routerLink="/chat" routerLinkActive="bg-primary/20 text-primary border-r-4 border-primary" class="flex items-center justify-between p-3 rounded-lg text-gray-400 hover:bg-white/5 hover:text-white transition-all group">
           <div class="flex items-center space-x-3">
             <span>💬 Mensajería</span>
           </div>
@@ -63,7 +64,7 @@ import { Rol } from '../../../core/models/usuario.model';
       </nav>
 
       <div class="p-4 mt-auto border-t border-white/5 bg-black/20">
-        <div routerLink="/perfil" class="flex items-center space-x-3 mb-4 p-2 rounded-xl hover:bg-white/5 transition-all cursor-pointer group">
+        <div (click)="uiService.closeSidebar()" routerLink="/perfil" class="flex items-center space-x-3 mb-4 p-2 rounded-xl hover:bg-white/5 transition-all cursor-pointer group">
           <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold group-hover:scale-110 transition-transform">
             {{ currentUser()?.nombre?.charAt(0) }}
           </div>
@@ -77,10 +78,14 @@ import { Rol } from '../../../core/models/usuario.model';
         </button>
       </div>
     </div>
-  `
+  `,
+  styles: [`
+    :host { display: block; height: 100%; }
+  `]
 })
 export class SidebarComponent {
   public authService = inject(AuthService);
+  public uiService = inject(UiService);
   private messagingService = inject(MessagingService);
   Rol = Rol;
   

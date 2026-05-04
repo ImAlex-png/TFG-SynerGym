@@ -2,15 +2,21 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { UiService } from '../../../core/services/ui.service';
 
 @Component({
   selector: 'app-header',
   standalone: true,
   imports: [CommonModule, RouterModule],
   template: `
-    <header class="h-16 bg-bg-card border-b border-white/10 flex items-center justify-between px-8 z-10">
+    <header class="h-16 bg-bg-card border-b border-white/10 flex items-center justify-between px-4 md:px-8 z-10">
       <div class="flex items-center space-x-4">
-        <h2 class="text-lg font-bold text-white">Panel de Control</h2>
+        <button (click)="uiService.toggleSidebar()" class="lg:hidden p-2 text-gray-400 hover:text-white transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        <h2 class="text-sm md:text-lg font-bold text-white truncate">Panel de Control</h2>
       </div>
 
       <div class="flex items-center space-x-4">
@@ -29,4 +35,5 @@ import { AuthService } from '../../../core/services/auth.service';
 })
 export class HeaderComponent {
   authService = inject(AuthService);
+  public uiService = inject(UiService);
 }
