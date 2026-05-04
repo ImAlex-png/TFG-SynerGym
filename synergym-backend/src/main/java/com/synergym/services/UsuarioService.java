@@ -34,8 +34,18 @@ public class UsuarioService implements UserDetailsService {
         Usuario usuario = usuarioRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con email: " + username));
 
-        return new User(usuario.getEmail(), usuario.getPassword(),
-                Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + usuario.getRol().name())));
+        return new User(
+                usuario.getEmail(), 
+                usuario.getPassword(),
+                usuario.isActivo(), 
+                true, true, true,
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + usuario.getRol().name()))
+        );
+    }
+
+    public Usuario findByEmail(String email) {
+        return usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new UsuarioNotFoundException("Usuario no encontrado con email: " + email));
     }
 
     // Obtener todos los usuarios activos
@@ -104,6 +114,7 @@ public class UsuarioService implements UserDetailsService {
         usuarioBD.setNombre(usuario.getNombre());
         usuarioBD.setApellidos(usuario.getApellidos());
         usuarioBD.setTelefono(usuario.getTelefono());
+        usuarioBD.setDni(usuario.getDni());
         usuarioBD.setRol(usuario.getRol());
         usuarioBD.setActivo(usuario.isActivo());
 

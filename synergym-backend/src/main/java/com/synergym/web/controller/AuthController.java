@@ -31,4 +31,9 @@ public class AuthController {
     public ResponseEntity<LoginResponse> refresh(@RequestBody RefreshDTO request) {
         return ResponseEntity.ok(authService.refresh(request));
     }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUser(org.springframework.security.core.Authentication auth) {
+        return ResponseEntity.ok(authService.getCurrentUser(auth));
+    }
 }

@@ -81,4 +81,9 @@ public class AuthService {
 
         return response;
     }
+
+    public com.synergym.persistence.entities.Usuario getCurrentUser(org.springframework.security.core.Authentication auth) {
+        String email = auth.getName();
+        return this.usuarioService.findByEmail(email);
+    }
 }

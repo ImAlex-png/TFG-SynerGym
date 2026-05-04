@@ -38,9 +38,15 @@ import { Router, RouterModule } from '@angular/router';
             <input type="email" formControlName="email" class="w-full bg-black/40 border border-white/5 rounded-2xl px-4 py-3 sm:px-5 sm:py-4 text-white focus:outline-none focus:border-primary transition-all text-sm sm:text-base">
           </div>
 
-          <div>
-            <label class="block text-[10px] font-black text-gray-500 mb-2 uppercase tracking-[0.2em]">Teléfono</label>
-            <input type="text" formControlName="telefono" class="w-full bg-black/40 border border-white/5 rounded-2xl px-4 py-3 sm:px-5 sm:py-4 text-white focus:outline-none focus:border-primary transition-all text-sm sm:text-base">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+            <div>
+              <label class="block text-[10px] font-black text-gray-500 mb-2 uppercase tracking-[0.2em]">Teléfono</label>
+              <input type="text" formControlName="telefono" class="w-full bg-black/40 border border-white/5 rounded-2xl px-4 py-3 sm:px-5 sm:py-4 text-white focus:outline-none focus:border-primary transition-all text-sm sm:text-base">
+            </div>
+            <div>
+              <label class="block text-[10px] font-black text-gray-500 mb-2 uppercase tracking-[0.2em]">DNI</label>
+              <input type="text" formControlName="dni" class="w-full bg-black/40 border border-white/5 rounded-2xl px-4 py-3 sm:px-5 sm:py-4 text-white focus:outline-none focus:border-primary transition-all text-sm sm:text-base">
+            </div>
           </div>
 
           <div>
@@ -76,6 +82,7 @@ export class RegisterComponent {
     apellidos: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     telefono: ['', Validators.required],
+    dni: ['', [Validators.required, Validators.pattern('^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE]$')]],
     password: ['', [Validators.required, Validators.minLength(4)]]
   });
 
@@ -107,7 +114,7 @@ export class RegisterComponent {
       nombre: formVal.nombre,
       apellidos: formVal.apellidos,
       telefono: formVal.telefono,
-      dni: this.generateRandomDNI(),
+      dni: formVal.dni,
       rol: 'ALUMNO'
     };
 
@@ -115,8 +122,6 @@ export class RegisterComponent {
     this.authService.register(registerData).subscribe({
       next: () => this.doAutoLogin(formVal.email!, formVal.password!),
       error: (err) => {
-        // Si es 403, es probable que se haya creado el usuario pero fallara el login interno del server
-        // Intentamos login manual desde el cliente
         if (err.status === 403 || err.status === 401) {
           this.doAutoLogin(formVal.email!, formVal.password!);
         } else {
@@ -133,15 +138,8 @@ export class RegisterComponent {
         this.router.navigate(['/dashboard']);
       },
       error: () => {
-        // Si todo falla, al menos que vaya al login con el aviso
         this.router.navigate(['/login'], { queryParams: { registered: 'true' } });
       }
     });
-  }
-
-  private generateRandomDNI(): string {
-    const num = Math.floor(10000000 + Math.random() * 90000000);
-    const letters = 'TRWAGMYFPDXBNJZSQVHLCKE';
-    return `${num}${letters[num % 23]}`;
   }
 }

@@ -1,7 +1,7 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs';
-import { LoginResponse, Usuario } from '../models/usuario.model';
+import { LoginResponse, Usuario, Rol } from '../models/usuario.model';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 })
 export class AuthService {
   private readonly apiUrl = 'http://localhost:8081/auth';
-  
+
   // Signals
   currentUser = signal<Usuario | null>(null);
   isAuthenticated = computed(() => !!this.currentUser());
@@ -52,7 +52,7 @@ export class AuthService {
   private setSession(authResult: any, userData?: any) {
     localStorage.setItem('token', authResult.access);
     localStorage.setItem('refreshToken', authResult.refresh);
-    
+
     // Si tenemos datos del usuario, los guardamos temporalmente
     if (userData) {
       const email = userData.email || userData.username;
@@ -60,22 +60,27 @@ export class AuthService {
       let rol = userData.rol || 'ALUMNO';
 
       // Mapeo manual para los usuarios iniciales del data.sql
+      let nombre = userData.nombre || 'Usuario';
+      
       if (email === 'admin@synergym.com') {
         id = 1;
         rol = 'ADMINISTRADOR';
+        nombre = 'Admin';
       } else if (email === 'marcos.entrenador@synergym.com') {
         id = 2;
         rol = 'ENTRENADOR';
+        nombre = 'Marcos';
       } else if (email === 'sara.entrenador@synergym.com') {
         id = 3;
         rol = 'ENTRENADOR';
+        nombre = 'Sara';
       }
 
-      const user = { id, nombre: userData.nombre || 'Usuario', email, rol };
+      const user = { id, nombre, email, rol };
       localStorage.setItem('user', JSON.stringify(user));
       this.currentUser.set(user as Usuario);
     }
-    
+
     this.loadUserProfile();
   }
 

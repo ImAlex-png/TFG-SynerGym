@@ -35,6 +35,6 @@ export class UsuarioService {
   }
 
   delete(id: number) {
-    return this.http.delete(`${this.apiUrl}/delete/${id}`);
+    return this.http.delete(`${this.apiUrl}/${id}`);
   }
 }

@@ -63,13 +63,13 @@ import { Rol } from '../../../core/models/usuario.model';
       </nav>
 
       <div class="p-4 mt-auto border-t border-white/5 bg-black/20">
-        <div class="flex items-center space-x-3 mb-4 p-2">
-          <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">
+        <div routerLink="/perfil" class="flex items-center space-x-3 mb-4 p-2 rounded-xl hover:bg-white/5 transition-all cursor-pointer group">
+          <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold group-hover:scale-110 transition-transform">
             {{ currentUser()?.nombre?.charAt(0) }}
           </div>
           <div class="flex-1 min-w-0">
-            <p class="text-sm font-bold text-white truncate">{{ currentUser()?.nombre }}</p>
-            <p class="text-[10px] text-gray-500 truncate uppercase">{{ currentUser()?.rol }}</p>
+            <p class="text-sm font-bold text-white truncate group-hover:text-primary transition-colors">{{ currentUser()?.nombre }}</p>
+            <p class="text-[10px] text-gray-500 truncate uppercase tracking-widest">{{ currentUser()?.rol }}</p>
           </div>
         </div>
         <button (click)="logout()" class="w-full flex items-center space-x-3 p-3 rounded-lg text-red-400 hover:bg-red-500/10 transition-all font-bold text-sm">
