@@ -10,10 +10,21 @@ import { AuthService } from '../../../core/services/auth.service';
   imports: [CommonModule],
   template: `
     <div class="space-y-8">
-      <div class="bg-gradient-to-r from-secondary/20 to-primary/20 p-8 rounded-3xl border border-white/10">
+      <div class="bg-gradient-to-r from-secondary/20 to-primary/20 p-8 rounded-3xl border border-white/10 mb-8">
         <h1 class="text-4xl font-black italic tracking-tighter text-white uppercase">Explorar Clases</h1>
         <p class="text-gray-400 mt-2 font-medium">Encuentra tu próximo desafío y reserva tu plaza.</p>
       </div>
+
+      <!-- Notificación -->
+      @if (notification()) {
+        <div class="fixed top-24 right-8 z-50 animate-in fade-in slide-in-from-right-8 duration-300">
+          <div [class]="notification()?.type === 'success' ? 'bg-green-500 shadow-green-500/20' : 'bg-red-500 shadow-red-500/20'" 
+               class="flex items-center space-x-3 px-6 py-4 rounded-2xl shadow-2xl text-white font-bold border border-white/20">
+            <span>{{ notification()?.message }}</span>
+            <button (click)="notification.set(null)" class="ml-4 hover:opacity-70">✕</button>
+          </div>
+        </div>
+      }
 
       <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
         @for (clase of clases(); track clase.idClases) {
@@ -72,6 +83,7 @@ export class AlumnoClasesComponent {
   private authService = inject(AuthService);
   
   clases = signal<Clase[]>([]);
+  notification = signal<{message: string, type: 'success' | 'error'} | null>(null);
 
   constructor() {
     this.loadClases();
@@ -86,8 +98,23 @@ export class AlumnoClasesComponent {
     if (!idAlumno) return;
 
     this.inscripcionService.crear(idAlumno, idClase).subscribe({
-      next: () => alert('¡Te has inscrito correctamente! Nos vemos en clase.'),
-      error: (err) => alert('No se pudo realizar la inscripción. Verifica si ya estás apuntado.')
+      next: () => {
+        this.notification.set({ message: '¡Inscripción realizada con éxito!', type: 'success' });
+        setTimeout(() => this.notification.set(null), 3000);
+      },
+      error: (err) => {
+        console.error('Error de inscripción:', err);
+        let msg = 'No se pudo realizar la inscripción.';
+        
+        if (typeof err.error === 'string') {
+          msg = err.error;
+        } else if (err.error && err.error.message) {
+          msg = err.error.message;
+        }
+        
+        this.notification.set({ message: msg, type: 'error' });
+        setTimeout(() => this.notification.set(null), 5000);
+      }
     });
   }
 }

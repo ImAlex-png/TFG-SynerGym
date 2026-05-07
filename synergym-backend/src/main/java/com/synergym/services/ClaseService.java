@@ -18,9 +18,16 @@ public class ClaseService {
     @Autowired
     private ClasesRepository clasesRepository;
 
+    @Autowired
+    private com.synergym.persistence.repositories.InscripcionRepository inscripcionRepository;
+
     // Obtener todas las clases
     public List<Clases> findAll() {
-        return clasesRepository.findAll();
+        List<Clases> clases = clasesRepository.findAll();
+        for (Clases c : clases) {
+            c.setAlumnosInscritos((int) inscripcionRepository.countByClasesIdClases(c.getIdClases()));
+        }
+        return clases;
     }
 
     // Buscar una clase por su ID
@@ -29,7 +36,9 @@ public class ClaseService {
         if (!optionalClase.isPresent()) {
             throw new ClaseNotFoundException("La clase con el ID " + idClase + " no existe");
         }
-        return optionalClase.get();
+        Clases c = optionalClase.get();
+        c.setAlumnosInscritos((int) inscripcionRepository.countByClasesIdClases(c.getIdClases()));
+        return c;
     }
 
     // Crear una nueva clase
@@ -81,7 +90,11 @@ public class ClaseService {
 
     // Obtener el calendario de clases para un entrenador específico
     public List<Clases> getCalendarioEntrenador(int idEntrenador) {
-        return clasesRepository.findByEntrenadorId(idEntrenador);
+        List<Clases> clases = clasesRepository.findByEntrenadorId(idEntrenador);
+        for (Clases c : clases) {
+            c.setAlumnosInscritos((int) inscripcionRepository.countByClasesIdClases(c.getIdClases()));
+        }
+        return clases;
     }
 
 }

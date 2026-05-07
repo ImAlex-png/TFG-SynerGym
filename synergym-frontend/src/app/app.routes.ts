@@ -45,12 +45,18 @@ export const routes: Routes = [
         path: 'admin/clases/editar/:id',
         loadComponent: () => import('./features/admin/clases/clase-form.component').then(m => m.ClaseFormComponent)
       },
+      // Entrenador Routes
       {
-        path: 'clases',
+        path: 'entrenador/mis-clases',
+        loadComponent: () => import('./features/entrenador/mis-clases/mis-clases.component').then(m => m.MisClasesComponent)
+      },
+      // Alumno Routes
+      {
+        path: 'alumno/clases',
         loadComponent: () => import('./features/alumno/clases/clases.component').then(m => m.AlumnoClasesComponent)
       },
       {
-        path: 'mis-inscripciones',
+        path: 'alumno/mis-inscripciones',
         loadComponent: () => import('./features/alumno/inscripciones/mis-inscripciones.component').then(m => m.MisInscripcionesComponent)
       },
       {

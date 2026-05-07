@@ -35,9 +35,12 @@ public class AuthService {
         String accessToken = jwtUtil.generateAccessToken(userDetails);
         String refreshToken = jwtUtil.generateRefreshToken(userDetails);
 
+        com.synergym.persistence.entities.Usuario user = this.usuarioService.findByEmail(userDetails.getUsername());
+
         LoginResponse response = new LoginResponse();
         response.setAccess(accessToken);
         response.setRefresh(refreshToken);
+        response.setUserId(user.getId());
 
         return response;
     }
@@ -48,7 +51,7 @@ public class AuthService {
         }
 
         // 1. Crear el usuario
-        this.usuarioService.create(request);
+        com.synergym.persistence.entities.Usuario nuevoUsuario = this.usuarioService.create(request);
 
         // 2. Intentar login automático
         try {
@@ -63,11 +66,14 @@ public class AuthService {
             LoginResponse response = new LoginResponse();
             response.setAccess(accessToken);
             response.setRefresh(refreshToken);
+            response.setUserId(nuevoUsuario.getId());
             return response;
             
         } catch (AuthenticationException e) {
-            // Si el login automático falla, devolvemos una respuesta vacía pero NO lanzamos error
-            return new LoginResponse();
+            // Si el login automático falla, devolvemos una respuesta básica con el ID si es posible
+            LoginResponse response = new LoginResponse();
+            response.setUserId(nuevoUsuario.getId());
+            return response;
         }
     }
 

@@ -32,9 +32,6 @@ public class Inscripcion {
     @Enumerated(EnumType.STRING)
     private Estado estado;
 
-    @Column(columnDefinition = "BOOLEAN")
-    private boolean pagado;
-
     @Column(name = "fecha_inscripcion")
     private LocalDate fechaInscripcion;
 

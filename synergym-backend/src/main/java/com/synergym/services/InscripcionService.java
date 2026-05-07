@@ -71,17 +71,25 @@ public class InscripcionService {
 
     // Crear una nueva inscripción
     public Inscripcion create(Inscripcion inscripcion) {
-        // Validar que la clase y el alumno existen
-        Clases clase = claseService.findById(inscripcion.getClases().getIdClases());
-        
-        Usuario alumno = usuarioService.findById(inscripcion.getAlumno().getId());
-        
-        // --- Seguridad: Solo el propio usuario o un admin puede inscribirse ---
+        // --- Identificar al alumno ---
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String usernameActual = auth.getName();
         boolean isAdmin = auth.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMINISTRADOR"));
+
+        Usuario alumno;
+        // Si el ID es 0 o no es admin, usamos el usuario autenticado para seguridad
+        if (inscripcion.getAlumno() == null || inscripcion.getAlumno().getId() == 0 || !isAdmin) {
+            alumno = usuarioService.findByEmail(usernameActual);
+        } else {
+            alumno = usuarioService.findById(inscripcion.getAlumno().getId());
+        }
+        // ------------------------------
+
+        // Validar que la clase existe
+        Clases clase = claseService.findById(inscripcion.getClases().getIdClases());
         
+        // --- Seguridad extra: Solo el propio usuario o un admin puede inscribirse ---
         if (!isAdmin && !alumno.getEmail().equals(usernameActual)) {
             throw new InscripcionException("No tienes permiso para inscribir a otro usuario");
         }
@@ -93,7 +101,7 @@ public class InscripcionService {
         }
 
         // Regla: No se puede crear una inscripción duplicada
-        if (inscripcionRepository.existsByAlumnoIdAndClasesIdClases(inscripcion.getAlumno().getId(), clase.getIdClases())) {
+        if (inscripcionRepository.existsByAlumnoIdAndClasesIdClases(alumno.getId(), clase.getIdClases())) {
             throw new InscripcionException("El alumno ya está inscrito en esta clase");
         }
 
@@ -109,8 +117,9 @@ public class InscripcionService {
         
         inscripcion.setFechaInscripcion(LocalDate.now());
         inscripcion.setEstado(Estado.ACEPTADA);
-        inscripcion.setPagado(true);
         inscripcion.setIdInscripcion(0);
+        inscripcion.setAlumno(alumno);
+        inscripcion.setClases(clase);
 
         return this.inscripcionRepository.save(inscripcion);
     }
@@ -119,7 +128,6 @@ public class InscripcionService {
     public Inscripcion update(Inscripcion inscripcion, int idInscripcion) {
         Inscripcion inscripcionBD = this.findById(idInscripcion);
         inscripcionBD.setEstado(inscripcion.getEstado());
-        inscripcionBD.setPagado(inscripcion.isPagado());
         inscripcionBD.setFechaInscripcion(inscripcion.getFechaInscripcion());
         inscripcionBD.setAlumno(inscripcion.getAlumno());
         inscripcionBD.setClases(inscripcion.getClases());

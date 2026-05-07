@@ -9,8 +9,8 @@ export interface Clase {
   horaInicio: string;
   horaFin: string;
   capacidadMaxima: number;
-  entrenador: any;
   alumnosInscritos?: number;
+  entrenador: any;
 }
 
 @Injectable({
