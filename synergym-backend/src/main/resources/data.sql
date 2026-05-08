@@ -5,14 +5,14 @@
 INSERT INTO usuario (nombre, apellidos, dni, telefono, email, password, rol, activo) VALUES 
 ('Admin', 'Principal', '11111111A', '600111222', 'admin@synergym.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.TVuHOn2', 'ADMINISTRADOR', true),
 
-('Marcos', 'Pérez', '44444444D', '610111222', 'marcos.entrenador@synergym.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.TVuHOn2', 'ENTRENADOR', true),
-('Sara', 'López', '55555555E', '610333444', 'sara.entrenador@synergym.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.TVuHOn2', 'ENTRENADOR', true),
+('Marcos', 'Pérez', '44444444D', '610111222', 'marcos.entrenador@synergym.com', '$2a$12$8oEKbikfK28qd/alrS1m2Oc3DBBApmYUjlkkNqGlKZrxc/9k6xTYy', 'ENTRENADOR', true),
+('Sara', 'López', '55555555E', '610333444', 'sara.entrenador@synergym.com', '$$2a$12$8oEKbikfK28qd/alrS1m2Oc3DBBApmYUjlkkNqGlKZrxc/9k6xTYy', 'ENTRENADOR', true),
 
 ('Antonio', 'Sánchez', '90000001A', '620111001', 'antonio.alumno@gmail.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.TVuHOn2', 'ALUMNO', true),
-('María', 'Jiménez', '90000002B', '620111002', 'maria.alumno@gmail.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.TVuHOn2', 'ALUMNO', true),
-('Pepe', 'Navarro', '90000003C', '620111003', 'pepe.alumno@gmail.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.TVuHOn2', 'ALUMNO', true),
-('Carmen', 'Romero', '90000004D', '620111004', 'carmen.alumno@yahoo.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.TVuHOn2', 'ALUMNO', true),
-('Francisco', 'Gil', '90000005E', '620111005', 'francisco.alumno@hotmail.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.TVuHOn2', 'ALUMNO', true);
+('María', 'Jiménez', '90000002B', '620111002', 'maria.alumno@gmail.com', '$2a$12$dS6W.dFvuxbm3.ByMTAzOukM5r2RsDO5K.xo9GUeAoI5BC.MX7eHK', 'ALUMNO', true),
+('Pepe', 'Navarro', '90000003C', '620111003', 'pepe.alumno@gmail.com', '$2a$12$dS6W.dFvuxbm3.ByMTAzOukM5r2RsDO5K.xo9GUeAoI5BC.MX7eHK', 'ALUMNO', true),
+('Carmen', 'Romero', '90000004D', '620111004', 'carmen.alumno@yahoo.com', '$2a$12$dS6W.dFvuxbm3.ByMTAzOukM5r2RsDO5K.xo9GUeAoI5BC.MX7eHK', 'ALUMNO', true),
+('Francisco', 'Gil', '90000005E', '620111005', 'francisco.alumno@hotmail.com', '$2a$12$dS6W.dFvuxbm3.ByMTAzOukM5r2RsDO5K.xo9GUeAoI5BC.MX7eHK', 'ALUMNO', true);
 
 
 -- 2. CLASES (Programación de Mayo 2026 - 2 clases por día)

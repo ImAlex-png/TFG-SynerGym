@@ -3,35 +3,50 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
 import { UsuarioService } from '../../core/services/usuario.service';
-import { Usuario } from '../../core/models/usuario.model';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
   template: `
-    <div class="max-w-4xl mx-auto space-y-6 animate-fade-in pb-12">
-      <!-- Profile Header Card -->
-      <div class="bg-bg-card border border-white/5 rounded-2xl p-8 relative overflow-hidden group">
+    <div class="max-w-4xl mx-auto space-y-6 animate-fade-in pb-12 p-4 md:p-0">
+      
+      <!-- Profile Header Card (Responsive) -->
+      <div class="bg-bg-card border border-white/5 rounded-3xl p-6 md:p-10 relative overflow-hidden group shadow-2xl">
         <div class="absolute top-0 right-0 w-64 h-64 bg-primary/10 blur-[100px] rounded-full -mr-32 -mt-32 transition-all group-hover:bg-primary/20"></div>
         
-        <div class="relative flex flex-col md:flex-row items-center space-y-6 md:space-y-0 md:space-x-8">
-          <div class="w-32 h-32 rounded-2xl bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center text-4xl font-black text-white shadow-2xl shadow-primary/20 border-4 border-white/10">
+        <div class="relative flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-10">
+          <!-- Avatar -->
+          <div class="w-28 h-28 md:w-40 md:h-40 rounded-[2rem] bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-5xl md:text-6xl font-black text-white shadow-2xl shadow-primary/30 border-4 border-white/10 shrink-0 transform hover:rotate-3 transition-transform">
             {{ user()?.nombre?.charAt(0) }}
           </div>
           
-          <div class="flex-1 text-center md:text-left">
-            <div class="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-4">
-              <h1 class="text-3xl font-black text-white tracking-tight">{{ user()?.nombre }} {{ user()?.apellidos }}</h1>
-              <span class="inline-flex px-3 py-1 rounded-full bg-primary/20 text-primary text-xs font-bold uppercase tracking-wider self-center md:self-auto">
-                {{ user()?.rol }}
-              </span>
+          <div class="flex-1 text-center md:text-left space-y-4">
+            <div class="space-y-2">
+              <div class="flex flex-col md:flex-row md:items-center gap-3 justify-center md:justify-start">
+                <h1 class="text-3xl md:text-5xl font-black text-white tracking-tighter italic uppercase leading-tight">
+                  {{ user()?.nombre }} <span class="text-primary">{{ user()?.apellidos }}</span>
+                </h1>
+              </div>
+              <div class="flex flex-wrap justify-center md:justify-start gap-2 mt-2">
+                <span class="px-4 py-1 rounded-full bg-white/5 text-gray-400 text-[10px] font-black uppercase tracking-widest border border-white/10">
+                  {{ user()?.rol }}
+                </span>
+                <span class="px-4 py-1 rounded-full bg-green-500/10 text-green-500 text-[10px] font-black uppercase tracking-widest border border-green-500/20 flex items-center">
+                  <span class="w-1.5 h-1.5 bg-green-500 rounded-full mr-2 animate-pulse"></span>
+                  Cuenta Activa
+                </span>
+              </div>
             </div>
-            <p class="text-gray-400 mt-2 font-medium">{{ user()?.email }}</p>
             
-            <div class="flex flex-wrap justify-center md:justify-start gap-4 mt-6">
-              <button (click)="toggleEdit()" class="px-6 py-2 bg-primary hover:bg-primary/80 text-white rounded-xl font-bold transition-all shadow-lg shadow-primary/20 active:scale-95">
-                {{ isEditing() ? '❌ Cancelar' : '✍️ Editar Perfil' }}
+            <p class="text-gray-400 font-medium text-lg">{{ user()?.email }}</p>
+            
+            <div class="pt-4">
+              <button (click)="toggleEdit()" 
+                      [class]="isEditing() ? 'bg-red-500/10 text-red-500 border-red-500/20' : 'bg-primary text-white border-primary/20'"
+                      class="w-full md:w-auto px-8 py-4 rounded-2xl font-black uppercase tracking-widest transition-all border shadow-xl active:scale-95 flex items-center justify-center space-x-3">
+                <span>{{ isEditing() ? 'CANCELAR EDICIÓN' : 'EDITAR PERFIL' }}</span>
+                <span class="text-xl">{{ isEditing() ? '✕' : '✍️' }}</span>
               </button>
             </div>
           </div>
@@ -41,94 +56,92 @@ import { Usuario } from '../../core/models/usuario.model';
       <!-- Content Area -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         
-        <!-- Stats/Quick Info (Side) -->
-        <div class="md:col-span-1 space-y-6">
-          <div class="bg-bg-card border border-white/5 rounded-2xl p-6">
-            <h3 class="text-xs font-black text-gray-500 uppercase tracking-widest mb-4">Estado de Cuenta</h3>
-            <div class="flex items-center space-x-3 p-3 rounded-xl bg-white/5 border border-white/5">
-              <span class="w-3 h-3 rounded-full" [ngClass]="user()?.activo ? 'bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]' : 'bg-red-500'"></span>
-              <span class="text-white font-bold">{{ user()?.activo ? 'Verificada y Activa' : 'Inactiva' }}</span>
-            </div>
-          </div>
-          
-          <div class="bg-bg-card border border-white/5 rounded-2xl p-6">
-            <h3 class="text-xs font-black text-gray-500 uppercase tracking-widest mb-4">Identificación</h3>
-            <div class="space-y-4">
-              <div class="p-3 rounded-xl bg-white/5 border border-white/5">
-                <p class="text-[10px] text-primary font-bold uppercase mb-1">DNI / NIE</p>
-                <p class="text-white font-mono">{{ user()?.dni || 'No asignado' }}</p>
-              </div>
-              <div class="p-3 rounded-xl bg-white/5 border border-white/5">
-                <p class="text-[10px] text-primary font-bold uppercase mb-1">Teléfono</p>
-                <p class="text-white">{{ user()?.telefono || 'No asignado' }}</p>
-              </div>
-            </div>
+        <!-- Sidebar Info -->
+        <div class="md:col-span-1 space-y-6 order-2 md:order-1">
+          <div class="bg-bg-card border border-white/5 rounded-3xl p-8 space-y-6 shadow-xl">
+             <h3 class="text-[10px] font-black text-primary uppercase tracking-[0.3em] border-b border-white/5 pb-4">Detalles Técnicos</h3>
+             
+             <div class="space-y-4">
+                <div class="group">
+                  <p class="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1 group-hover:text-gray-400 transition-colors">DNI / NIE</p>
+                  <p class="text-white font-mono font-bold tracking-widest">{{ user()?.dni || 'No asignado' }}</p>
+                </div>
+                
+                <div class="group">
+                  <p class="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1 group-hover:text-gray-400 transition-colors">Teléfono</p>
+                  <p class="text-white font-bold">{{ user()?.telefono || 'No asignado' }}</p>
+                </div>
+
+                <div class="group">
+                  <p class="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1 group-hover:text-gray-400 transition-colors">ID Sistema</p>
+                  <p class="text-white font-mono text-sm opacity-50">#SYNER-{{ user()?.id }}</p>
+                </div>
+             </div>
           </div>
         </div>
 
-        <!-- Main Info / Edit Form -->
-        <div class="md:col-span-2">
-          <div class="bg-bg-card border border-white/5 rounded-[32px] p-8 shadow-xl">
-            
-            @if (!isEditing()) {
-              <div class="space-y-8 animate-fade-in">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div>
-                    <label class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Nombre</label>
-                    <p class="text-xl text-white font-bold">{{ user()?.nombre }}</p>
-                  </div>
-                  <div>
-                    <label class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Apellidos</label>
-                    <p class="text-xl text-white font-bold">{{ user()?.apellidos }}</p>
-                  </div>
-                  <div>
-                    <label class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Email</label>
-                    <p class="text-xl text-white font-bold">{{ user()?.email }}</p>
-                  </div>
-                  <div>
-                    <label class="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">Rol</label>
-                    <p class="text-xl text-primary font-black italic">{{ user()?.rol }}</p>
+        <!-- Main Form / Info -->
+        <div class="md:col-span-2 order-1 md:order-2">
+          <div class="bg-bg-card border border-white/5 rounded-[2.5rem] p-8 md:p-12 shadow-2xl relative overflow-hidden">
+            <div class="relative z-10">
+               @if (!isEditing()) {
+                <div class="space-y-10 animate-fade-in">
+                  <h3 class="text-[10px] font-black text-primary uppercase tracking-[0.3em] mb-8">Información Personal</h3>
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-10">
+                    <div class="space-y-1">
+                      <label class="block text-[9px] font-black text-gray-500 uppercase tracking-widest">Nombre</label>
+                      <p class="text-2xl text-white font-black italic uppercase tracking-tighter">{{ user()?.nombre }}</p>
+                    </div>
+                    <div class="space-y-1">
+                      <label class="block text-[9px] font-black text-gray-500 uppercase tracking-widest">Apellidos</label>
+                      <p class="text-2xl text-white font-black italic uppercase tracking-tighter">{{ user()?.apellidos }}</p>
+                    </div>
+                    <div class="space-y-1 sm:col-span-2">
+                      <label class="block text-[9px] font-black text-gray-500 uppercase tracking-widest">Correo Electrónico</label>
+                      <p class="text-2xl text-white font-black italic uppercase tracking-tighter truncate">{{ user()?.email }}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            } @else {
-              <form [formGroup]="profileForm" (ngSubmit)="save()" class="space-y-6 animate-slide-up">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div class="space-y-2">
-                    <label class="block text-xs font-black text-gray-400 uppercase tracking-widest">Nombre</label>
-                    <input formControlName="nombre" type="text" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-primary outline-none transition-all">
+              } @else {
+                <form [formGroup]="profileForm" (ngSubmit)="save()" class="space-y-8 animate-slide-up">
+                  <h3 class="text-[10px] font-black text-primary uppercase tracking-[0.3em] mb-8">Modificar Datos</h3>
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                      <label class="block text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Nombre</label>
+                      <input formControlName="nombre" type="text" class="w-full bg-black/40 border border-white/5 rounded-2xl px-6 py-4 text-white focus:border-primary outline-none transition-all shadow-inner">
+                    </div>
+                    <div class="space-y-2">
+                      <label class="block text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Apellidos</label>
+                      <input formControlName="apellidos" type="text" class="w-full bg-black/40 border border-white/5 rounded-2xl px-6 py-4 text-white focus:border-primary outline-none transition-all shadow-inner">
+                    </div>
+                    <div class="space-y-2">
+                      <label class="block text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">DNI</label>
+                      <input formControlName="dni" type="text" class="w-full bg-black/40 border border-white/5 rounded-2xl px-6 py-4 text-white font-mono focus:border-primary outline-none transition-all shadow-inner">
+                    </div>
+                    <div class="space-y-2">
+                      <label class="block text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Teléfono</label>
+                      <input formControlName="telefono" type="text" class="w-full bg-black/40 border border-white/5 rounded-2xl px-6 py-4 text-white focus:border-primary outline-none transition-all shadow-inner">
+                    </div>
                   </div>
-                  <div class="space-y-2">
-                    <label class="block text-xs font-black text-gray-400 uppercase tracking-widest">Apellidos</label>
-                    <input formControlName="apellidos" type="text" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-primary outline-none transition-all">
-                  </div>
-                  <div class="space-y-2">
-                    <label class="block text-xs font-black text-gray-400 uppercase tracking-widest">DNI</label>
-                    <input formControlName="dni" type="text" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-primary outline-none transition-all">
-                  </div>
-                  <div class="space-y-2">
-                    <label class="block text-xs font-black text-gray-400 uppercase tracking-widest">Teléfono</label>
-                    <input formControlName="telefono" type="text" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-primary outline-none transition-all">
-                  </div>
-                </div>
 
-                <div class="pt-6 border-t border-white/5 flex justify-end space-x-4">
-                  <button type="button" (click)="toggleEdit()" class="px-6 py-3 text-gray-400 font-bold hover:text-white transition-colors">Cancelar</button>
-                  <button type="submit" [disabled]="profileForm.invalid || isSaving()" class="px-8 py-3 bg-gradient-to-r from-primary to-secondary text-white font-black uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-primary/20 disabled:opacity-50">
-                    {{ isSaving() ? 'Guardando...' : 'Guardar Cambios' }}
-                  </button>
-                </div>
-              </form>
-            }
+                  <div class="pt-8 border-t border-white/5 flex flex-col sm:flex-row justify-end gap-4">
+                    <button type="button" (click)="toggleEdit()" class="px-8 py-4 text-gray-400 font-bold hover:text-white transition-colors uppercase tracking-widest text-xs">Cancelar</button>
+                    <button type="submit" [disabled]="profileForm.invalid || isSaving()" class="px-10 py-4 bg-gradient-to-r from-primary to-secondary text-white font-black uppercase tracking-[0.2em] rounded-2xl transition-all shadow-xl shadow-primary/20 disabled:opacity-50 active:scale-95 text-xs">
+                      {{ isSaving() ? 'GUARDANDO...' : 'GUARDAR CAMBIOS' }}
+                    </button>
+                  </div>
+                </form>
+              }
+            </div>
           </div>
         </div>
       </div>
     </div>
   `,
   styles: [`
-    .animate-fade-in { animation: fadeIn 0.4s ease-out; }
-    .animate-slide-up { animation: slideUp 0.4s ease-out; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .animate-fade-in { animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+    .animate-slide-up { animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
   `]
 })
@@ -174,7 +187,6 @@ export class ProfileComponent {
 
     this.usuarioService.update(current.id, updatedData).subscribe({
       next: (updatedUser) => {
-        // Actualizar el estado global
         localStorage.setItem('user', JSON.stringify(updatedUser));
         this.authService.currentUser.set(updatedUser);
         this.isEditing.set(false);
@@ -183,7 +195,6 @@ export class ProfileComponent {
       error: (err) => {
         console.error('Error actualizando perfil', err);
         this.isSaving.set(false);
-        alert('Error al guardar los cambios. Inténtalo de nuevo.');
       }
     });
   }
