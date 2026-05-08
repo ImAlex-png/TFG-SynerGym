@@ -4,8 +4,7 @@ import { HttpClient } from '@angular/common/http';
 export interface Clase {
   idClases: number;
   nombre: string;
-  fechaInicio: string;
-  fechaFin: string;
+  fecha: string;
   horaInicio: string;
   horaFin: string;
   capacidadMaxima: number;

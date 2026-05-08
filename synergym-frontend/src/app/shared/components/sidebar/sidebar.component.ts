@@ -14,12 +14,12 @@ import { UiService } from '../../../core/services/ui.service';
     <div class="w-64 bg-bg-card border-r border-white/5 flex flex-col h-full shadow-2xl">
       <div class="p-8">
         <h1 class="text-2xl font-black italic text-primary tracking-tighter uppercase">SynerGym</h1>
-        <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">Power your limits</p>
+        <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">Potencia tus límites</p>
       </div>
 
       <nav class="flex-1 px-4 space-y-2 mt-4">
         <a (click)="uiService.closeSidebar()" routerLink="/dashboard" routerLinkActive="bg-primary/20 text-primary border-r-4 border-primary" class="flex items-center space-x-3 p-3 rounded-lg text-gray-400 hover:bg-white/5 hover:text-white transition-all">
-          <span>📊 Dashboard</span>
+          <span>📊 Calendario</span>
         </a>
 
         <!-- Admin Only -->
@@ -55,7 +55,7 @@ import { UiService } from '../../../core/services/ui.service';
         <div class="pt-4 pb-2 text-xs font-semibold text-gray-500 uppercase px-3">Comunidad</div>
         <a (click)="uiService.closeSidebar()" routerLink="/chat" routerLinkActive="bg-primary/20 text-primary border-r-4 border-primary" class="flex items-center justify-between p-3 rounded-lg text-gray-400 hover:bg-white/5 hover:text-white transition-all group">
           <div class="flex items-center space-x-3">
-            <span>💬 Mensajería</span>
+            <span>💬 Mis mensajes</span>
           </div>
           @if (hasNotifications()) {
             <span class="flex h-2 w-2 rounded-full bg-primary animate-pulse shadow-[0_0_10px_rgba(255,77,77,0.5)]"></span>

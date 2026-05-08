@@ -43,8 +43,12 @@ public class ClaseService {
 
     // Crear una nueva clase
     public Clases create(Clases clase) {
-        if (clase.getFechaFin().isBefore(clase.getFechaInicio())) {
-            throw new ClaseException("La fecha de fin no puede ser anterior a la fecha de inicio");
+        if (clase.getFecha() == null) {
+            clase.setFecha(LocalDate.now());
+        }
+
+        if (clase.getFecha().isBefore(LocalDate.now())) {
+            throw new ClaseException("La fecha de la clase no puede ser anterior a la actual");
         }
 
         if (clase.getHoraFin().isBefore(clase.getHoraInicio())) {
@@ -52,11 +56,6 @@ public class ClaseService {
         }
 
         clase.setIdClases(0);
-
-        // Si no se indica fecha de inicio, se pone la actual
-        if (clase.getFechaInicio() == null) {
-            clase.setFechaInicio(LocalDate.now());
-        }
 
         // Validar que el nombre no esté vacío
         if (clase.getNombre() == null || clase.getNombre().trim().isEmpty()) {
@@ -79,7 +78,7 @@ public class ClaseService {
         Clases claseBD = this.findById(idClase);
         
         claseBD.setNombre(clase.getNombre());
-        claseBD.setFechaFin(clase.getFechaFin());
+        claseBD.setFecha(clase.getFecha());
         claseBD.setHoraInicio(clase.getHoraInicio());
         claseBD.setHoraFin(clase.getHoraFin());
         claseBD.setCapacidadMaxima(clase.getCapacidadMaxima());

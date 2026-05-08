@@ -1,5 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { ClaseService, Clase } from '../../core/services/clase.service';
 
@@ -148,14 +149,19 @@ import { ClaseService, Clase } from '../../core/services/clase.service';
                 </div>
                 <div class="h-[1px] bg-white/5"></div>
                 <div>
-                  <p class="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1">Periodo</p>
-                  <p class="text-white text-sm font-medium">Del {{ selectedClase()?.fechaInicio | date:'dd/MM' }} al {{ selectedClase()?.fechaFin | date:'dd/MM/yyyy' }}</p>
+                  <p class="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1">Fecha</p>
+                  <p class="text-white text-sm font-medium">{{ selectedClase()?.fecha | date:'fullDate' }}</p>
                 </div>
               </div>
 
-              <button (click)="selectedClase.set(null)" class="w-full py-4 bg-primary hover:bg-primary/90 text-white font-black uppercase tracking-widest rounded-2xl transition-all shadow-lg shadow-primary/20 active:scale-95">
-                Cerrar Detalles
-              </button>
+              <div class="flex flex-col space-y-3">
+                <button (click)="router.navigate(['/alumno/clases'], { queryParams: { date: selectedClase()?.fecha } })" class="w-full py-4 bg-primary hover:bg-primary/90 text-white font-black uppercase tracking-widest rounded-2xl transition-all shadow-lg shadow-primary/20 active:scale-95">
+                  RESERVAR PLAZA
+                </button>
+                <button (click)="selectedClase.set(null)" class="w-full py-3 bg-white/5 hover:bg-white/10 text-gray-400 font-bold uppercase tracking-widest rounded-2xl transition-all active:scale-95">
+                  Cerrar
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -170,6 +176,7 @@ import { ClaseService, Clase } from '../../core/services/clase.service';
 export class DashboardComponent implements OnInit {
   authService = inject(AuthService);
   claseService = inject(ClaseService);
+  router = inject(Router);
 
   clases = signal<any[]>([]);
   weekDays: { name: string, date: Date }[] = [];
@@ -246,7 +253,7 @@ export class DashboardComponent implements OnInit {
     const dateStr = `${year}-${month}-${day}`;
 
     return this.clases().filter(clase => {
-      return dateStr >= clase.fechaInicio && dateStr <= clase.fechaFin;
+      return dateStr === clase.fecha;
     });
   }
 }

@@ -41,12 +41,10 @@ public class InscripcionService {
         if (isAdmin) {
             return inscripcionRepository.findAll();
         } else {
-            // Si no es admin, solo devolvemos sus propias inscripciones
             return inscripcionRepository.findByAlumnoEmail(usernameActual);
         }
     }
 
-    // Buscar una inscripción por su ID (con control de acceso)
     public Inscripcion findById(int idInscripcion) {
         Optional<Inscripcion> optionalInscripcion = this.inscripcionRepository.findById(idInscripcion);
         if (!optionalInscripcion.isPresent()) {
@@ -54,8 +52,6 @@ public class InscripcionService {
         }
         
         Inscripcion inscripcion = optionalInscripcion.get();
-        
-        // --- Seguridad: Solo el dueño o un admin puede ver el detalle ---
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String usernameActual = auth.getName();
         boolean isAdmin = auth.getAuthorities().stream()
@@ -64,57 +60,55 @@ public class InscripcionService {
         if (!isAdmin && !inscripcion.getAlumno().getEmail().equals(usernameActual)) {
             throw new InscripcionException("No tienes permiso para ver esta inscripción");
         }
-        // ----------------------------------------------------------------
         
         return inscripcion;
     }
 
-    // Crear una nueva inscripción
     public Inscripcion create(Inscripcion inscripcion) {
-        // --- Identificar al alumno ---
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String usernameActual = auth.getName();
         boolean isAdmin = auth.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMINISTRADOR"));
 
         Usuario alumno;
-        // Si el ID es 0 o no es admin, usamos el usuario autenticado para seguridad
         if (inscripcion.getAlumno() == null || inscripcion.getAlumno().getId() == 0 || !isAdmin) {
             alumno = usuarioService.findByEmail(usernameActual);
         } else {
             alumno = usuarioService.findById(inscripcion.getAlumno().getId());
         }
-        // ------------------------------
 
-        // Validar que la clase existe
         Clases clase = claseService.findById(inscripcion.getClases().getIdClases());
         
-        // --- Seguridad extra: Solo el propio usuario o un admin puede inscribirse ---
         if (!isAdmin && !alumno.getEmail().equals(usernameActual)) {
             throw new InscripcionException("No tienes permiso para inscribir a otro usuario");
         }
-        // ----------------------------------------------------------------------
         
-        // Regla: Una clase debe tener un entrenador asignado
         if (clase.getEntrenador() == null) {
             throw new InscripcionException("No se puede inscribir en una clase que no tiene entrenador asignado");
         }
 
-        // Regla: No se puede crear una inscripción duplicada
         if (inscripcionRepository.existsByAlumnoIdAndClasesIdClases(alumno.getId(), clase.getIdClases())) {
-            throw new InscripcionException("El alumno ya está inscrito en esta clase");
+            throw new InscripcionException("Ya estás inscrito en esta sesión");
         }
 
-        // Regla: Un alumno no puede inscribirse si la clase está llena
+        // Validación de solapamiento de horarios
+        List<Inscripcion> misInscripciones = inscripcionRepository.findByAlumnoId(alumno.getId());
+        for (Inscripcion existing : misInscripciones) {
+            Clases c = existing.getClases();
+            if (c.getFecha().equals(clase.getFecha())) {
+                boolean startsBeforeEnds = clase.getHoraInicio().isBefore(c.getHoraFin());
+                boolean endsAfterStarts = clase.getHoraFin().isAfter(c.getHoraInicio());
+                if (startsBeforeEnds && endsAfterStarts) {
+                    throw new InscripcionException("Ya tienes otra clase (" + c.getNombre() + ") que coincide en este horario");
+                }
+            }
+        }
+
         long inscritos = inscripcionRepository.countByClasesIdClases(clase.getIdClases());
         if (inscritos >= clase.getCapacidadMaxima()) {
             throw new InscripcionException("La clase está llena. Capacidad máxima: " + clase.getCapacidadMaxima());
         }
 
-        if (inscripcion.getFechaInscripcion() != null && inscripcion.getFechaInscripcion().isBefore(LocalDate.now())) {
-            throw new InscripcionNotFoundException("La fecha de inscripcion no puede ser anterior a la fecha actual");
-        }
-        
         inscripcion.setFechaInscripcion(LocalDate.now());
         inscripcion.setEstado(Estado.ACEPTADA);
         inscripcion.setIdInscripcion(0);
@@ -124,24 +118,17 @@ public class InscripcionService {
         return this.inscripcionRepository.save(inscripcion);
     }
 
-    // Actualizar una inscripción existente
     public Inscripcion update(Inscripcion inscripcion, int idInscripcion) {
         Inscripcion inscripcionBD = this.findById(idInscripcion);
         inscripcionBD.setEstado(inscripcion.getEstado());
         inscripcionBD.setFechaInscripcion(inscripcion.getFechaInscripcion());
         inscripcionBD.setAlumno(inscripcion.getAlumno());
         inscripcionBD.setClases(inscripcion.getClases());
-
-        inscripcionBD.setClases(inscripcion.getClases());
-
         return this.inscripcionRepository.save(inscripcionBD);
     }
 
-    // Eliminar una inscripción por su ID
     public void deleteById(int idInscripcion) {
         Inscripcion inscripcion = this.findById(idInscripcion);
-
-        // --- Seguridad: Solo el dueño de la inscripción o un admin puede borrarla ---
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String usernameActual = auth.getName();
         boolean isAdmin = auth.getAuthorities().stream()
@@ -150,20 +137,16 @@ public class InscripcionService {
         if (!isAdmin && !inscripcion.getAlumno().getEmail().equals(usernameActual)) {
             throw new InscripcionException("No tienes permiso para borrar una inscripción que no te pertenece");
         }
-        // -----------------------------------------------------------------------------
 
         this.inscripcionRepository.deleteById(idInscripcion);
     }
 
-    // Obtener la lista de alumnos inscritos en una clase específica
     public List<Usuario> getAlumnosDeClase(int idClase) {
         List<Inscripcion> inscripciones = inscripcionRepository.findByClasesIdClases(idClase);
         List<Usuario> alumnos = new ArrayList<>();
-        
         for (Inscripcion i : inscripciones) {
             alumnos.add(i.getAlumno());
         }
-        
         return alumnos;
     }
 }

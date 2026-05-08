@@ -12,8 +12,7 @@ import lombok.NoArgsConstructor;
 public class ClaseDTO {
     private int idClases;
     private String nombre;
-    private LocalDate fechaInicio;
-    private LocalDate fechaFin;
+    private LocalDate fecha;
     private LocalTime horaInicio;
     private LocalTime horaFin;
     private int capacidadMaxima;

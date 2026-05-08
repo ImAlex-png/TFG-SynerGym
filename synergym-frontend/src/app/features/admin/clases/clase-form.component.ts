@@ -15,7 +15,7 @@ import { Usuario, Rol } from '../../../core/models/usuario.model';
       <div class="flex items-center space-x-4 mb-8">
         <button routerLink="/admin/clases" class="text-gray-400 hover:text-white">← Volver</button>
         <h1 class="text-3xl font-black italic tracking-tighter text-white uppercase">
-          {{ isEdit() ? 'Editar' : 'Nueva' }} Clase
+          {{ isEdit() ? 'Editar' : 'Nueva' }} Sesión Individual
         </h1>
       </div>
 
@@ -26,13 +26,9 @@ import { Usuario, Rol } from '../../../core/models/usuario.model';
             <input type="text" formControlName="nombre" class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary transition-colors" placeholder="Ej: CrossFit WOD">
           </div>
           
-          <div>
-            <label class="block text-sm font-medium text-gray-400 mb-1">Fecha Inicio</label>
-            <input type="date" formControlName="fechaInicio" class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary transition-colors">
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-400 mb-1">Fecha Fin</label>
-            <input type="date" formControlName="fechaFin" class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary transition-colors">
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-gray-400 mb-1">Fecha de la Sesión</label>
+            <input type="date" formControlName="fecha" class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary transition-colors">
           </div>
 
           <div>
@@ -49,7 +45,7 @@ import { Usuario, Rol } from '../../../core/models/usuario.model';
             <input type="number" formControlName="capacidadMaxima" class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary transition-colors">
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-400 mb-1">Entrenador Responsable</label>
+            <label class="block text-sm font-medium text-gray-400 mb-1">Entrenador</label>
             <select formControlName="idEntrenador" class="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary transition-colors bg-black">
               <option [value]="null">Seleccionar Entrenador</option>
               @for (entrenador of entrenadores(); track entrenador.id) {
@@ -64,7 +60,7 @@ import { Usuario, Rol } from '../../../core/models/usuario.model';
             CANCELAR
           </button>
           <button type="submit" [disabled]="loading()" class="bg-primary hover:bg-primary/90 text-white px-8 py-2 rounded-lg font-bold transition-all transform hover:scale-[1.02]">
-            {{ loading() ? 'Guardando...' : (isEdit() ? 'ACTUALIZAR CLASE' : 'CREAR CLASE') }}
+            {{ loading() ? 'Guardando...' : (isEdit() ? 'ACTUALIZAR' : 'CREAR SESIÓN') }}
           </button>
         </div>
       </form>
@@ -85,8 +81,7 @@ export class ClaseFormComponent implements OnInit {
 
   claseForm = this.fb.group({
     nombre: ['', Validators.required],
-    fechaInicio: ['', Validators.required],
-    fechaFin: ['', Validators.required],
+    fecha: ['', Validators.required],
     horaInicio: ['', Validators.required],
     horaFin: ['', Validators.required],
     capacidadMaxima: [20, [Validators.required, Validators.min(1)]],
@@ -118,17 +113,14 @@ export class ClaseFormComponent implements OnInit {
 
   onSubmit() {
     if (this.claseForm.invalid) return;
-
     this.loading.set(true);
     const data = {
       ...this.claseForm.value,
       entrenador: { id: this.claseForm.value.idEntrenador }
     };
-
     const obs = this.isEdit() 
       ? this.claseService.update(this.claseId!, data)
       : this.claseService.create(data);
-
     obs.subscribe({
       next: () => this.router.navigate(['/admin/clases']),
       error: () => this.loading.set(false)

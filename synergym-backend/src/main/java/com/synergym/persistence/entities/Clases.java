@@ -33,11 +33,8 @@ public class Clases {
     @Column(name = "nombre", nullable = false)
     private String nombre;
 
-    @Column(name = "fecha_inicio", nullable = false)
-    private LocalDate fechaInicio;
-
-    @Column(name = "fecha_fin", nullable = false)
-    private LocalDate fechaFin;
+    @Column(name = "fecha", nullable = false)
+    private LocalDate fecha;
 
     @Column(name = "hora_inicio", nullable = false)
     private LocalTime horaInicio;

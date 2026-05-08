@@ -15,38 +15,86 @@ INSERT INTO usuario (nombre, apellidos, dni, telefono, email, password, rol, act
 ('Francisco', 'Gil', '90000005E', '620111005', 'francisco.alumno@hotmail.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07xd00DMxs.TVuHOn2', 'ALUMNO', true);
 
 
--- 2. CLASES 
--- (Asignadas automáticamente a los primeros entrenadores creados: IDs 2 y 3)
-INSERT INTO clases (nombre, fecha_inicio, fecha_fin, hora_inicio, hora_fin, capacidad_maxima, id_usuario_entrenador) VALUES 
-('Spinning Matutino', '2026-04-01', '2026-04-30', '08:00:00', '09:00:00', 20, 2),
-('Yoga Flow', '2026-04-01', '2026-04-30', '09:30:00', '10:30:00', 15, 3),
-('CrossFit Básico', '2026-04-01', '2026-05-31', '10:00:00', '11:00:00', 25, 2),
-('Zumba', '2026-04-01', '2026-05-31', '18:00:00', '19:00:00', 30, 3),
-('Pilates Avanzado', '2026-04-01', '2026-06-30', '19:00:00', '20:00:00', 12, 2);
+-- 2. CLASES (Programación de Mayo 2026 - 2 clases por día)
+-- Lunes a Domingo, rotando disciplinas
+INSERT INTO clases (nombre, fecha, hora_inicio, hora_fin, capacidad_maxima, id_usuario_entrenador) VALUES 
+-- Semana 1
+('CrossFit WOD', '2026-05-01', '08:00:00', '09:00:00', 20, 2),
+('Yoga Flow', '2026-05-01', '10:00:00', '11:00:00', 15, 3),
+('Spinning HIIT', '2026-05-02', '09:00:00', '10:00:00', 25, 2),
+('Zumba Party', '2026-05-02', '18:00:00', '19:00:00', 30, 3),
+('Pilates Core', '2026-05-03', '11:00:00', '12:00:00', 12, 3),
+('Boxeo Técnico', '2026-05-03', '19:00:00', '20:00:00', 16, 2),
+('Body Pump', '2026-05-04', '08:30:00', '09:30:00', 20, 2),
+('Yoga Restaurativo', '2026-05-04', '17:30:00', '18:30:00', 15, 3),
+('GAP Intenso', '2026-05-05', '10:00:00', '11:00:00', 20, 3),
+('CrossFit Strength', '2026-05-05', '19:00:00', '20:00:00', 25, 2),
+('Spinning Endurance', '2026-05-06', '08:00:00', '09:00:00', 25, 2),
+('Zumba Gold', '2026-05-06', '11:00:00', '12:00:00', 30, 3),
+('Pilates Balance', '2026-05-07', '09:30:00', '10:30:00', 15, 3),
+('Kick Boxing', '2026-05-07', '20:00:00', '21:00:00', 16, 2),
 
-INSERT INTO clases (nombre, fecha_inicio, fecha_fin, hora_inicio, hora_fin, capacidad_maxima, id_usuario_entrenador) VALUES 
-('GAP', '2026-04-01', '2026-06-30', '11:00:00', '12:00:00', 20, 3),
-('Boxeo', '2026-04-01', '2026-04-30', '20:00:00', '21:00:00', 16, 2);
+-- Semana 2 (Repetimos patrón con ligeras variaciones)
+('CrossFit WOD', '2026-05-08', '08:00:00', '09:00:00', 20, 2),
+('Yoga Flow', '2026-05-08', '10:00:00', '11:00:00', 15, 3),
+('Spinning HIIT', '2026-05-09', '09:00:00', '10:00:00', 25, 2),
+('Zumba Party', '2026-05-09', '18:00:00', '19:00:00', 30, 3),
+('Pilates Core', '2026-05-10', '11:00:00', '12:00:00', 12, 3),
+('Boxeo Técnico', '2026-05-10', '19:00:00', '20:00:00', 16, 2),
+('Body Pump', '2026-05-11', '08:30:00', '09:30:00', 20, 2),
+('Yoga Restaurativo', '2026-05-11', '17:30:00', '18:30:00', 15, 3),
+('GAP Intenso', '2026-05-12', '10:00:00', '11:00:00', 20, 3),
+('CrossFit Strength', '2026-05-12', '19:00:00', '20:00:00', 25, 2),
+('Spinning Endurance', '2026-05-13', '08:00:00', '09:00:00', 25, 2),
+('Zumba Gold', '2026-05-13', '11:00:00', '12:00:00', 30, 3),
+('Pilates Balance', '2026-05-14', '09:30:00', '10:30:00', 15, 3),
+('Kick Boxing', '2026-05-14', '20:00:00', '21:00:00', 16, 2),
+
+-- Semana 3
+('CrossFit WOD', '2026-05-15', '08:00:00', '09:00:00', 20, 2),
+('Yoga Flow', '2026-05-15', '10:00:00', '11:00:00', 15, 3),
+('Spinning HIIT', '2026-05-16', '09:00:00', '10:00:00', 25, 2),
+('Zumba Party', '2026-05-16', '18:00:00', '19:00:00', 30, 3),
+('Pilates Core', '2026-05-17', '11:00:00', '12:00:00', 12, 3),
+('Boxeo Técnico', '2026-05-17', '19:00:00', '20:00:00', 16, 2),
+('Body Pump', '2026-05-18', '08:30:00', '09:30:00', 20, 2),
+('Yoga Restaurativo', '2026-05-18', '17:30:00', '18:30:00', 15, 3),
+('GAP Intenso', '2026-05-19', '10:00:00', '11:00:00', 20, 3),
+('CrossFit Strength', '2026-05-19', '19:00:00', '20:00:00', 25, 2),
+('Spinning Endurance', '2026-05-20', '08:00:00', '09:00:00', 25, 2),
+('Zumba Gold', '2026-05-20', '11:00:00', '12:00:00', 30, 3),
+('Pilates Balance', '2026-05-21', '09:30:00', '10:30:00', 15, 3),
+('Kick Boxing', '2026-05-21', '20:00:00', '21:00:00', 16, 2),
+
+-- Semana 4 y final
+('CrossFit WOD', '2026-05-22', '08:00:00', '09:00:00', 20, 2),
+('Yoga Flow', '2026-05-22', '10:00:00', '11:00:00', 15, 3),
+('Spinning HIIT', '2026-05-23', '09:00:00', '10:00:00', 25, 2),
+('Zumba Party', '2026-05-23', '18:00:00', '19:00:00', 30, 3),
+('Pilates Core', '2026-05-24', '11:00:00', '12:00:00', 12, 3),
+('Boxeo Técnico', '2026-05-24', '19:00:00', '20:00:00', 16, 2),
+('Body Pump', '2026-05-25', '08:30:00', '09:30:00', 20, 2),
+('Yoga Restaurativo', '2026-05-25', '17:30:00', '18:30:00', 15, 3),
+('GAP Intenso', '2026-05-26', '10:00:00', '11:00:00', 20, 3),
+('CrossFit Strength', '2026-05-26', '19:00:00', '20:00:00', 25, 2),
+('Spinning Endurance', '2026-05-27', '08:00:00', '09:00:00', 25, 2),
+('Zumba Gold', '2026-05-27', '11:00:00', '12:00:00', 30, 3),
+('Pilates Balance', '2026-05-28', '09:30:00', '10:30:00', 15, 3),
+('Kick Boxing', '2026-05-28', '20:00:00', '21:00:00', 16, 2),
+('HIIT Final', '2026-05-29', '09:00:00', '10:00:00', 20, 2),
+('Yoga Zen', '2026-05-29', '18:00:00', '19:00:00', 15, 3),
+('Masterclass Zumba', '2026-05-30', '10:00:00', '12:00:00', 50, 3),
+('Combate Final', '2026-05-31', '19:00:00', '21:00:00', 20, 2);
 
 
--- 3. INSCRIPCIONES
--- (Alumnos con IDs del 4 al 8, asignados a diferentes Clases [IDs 1 al 7])
-INSERT INTO inscripcion (estado, pagado, fecha_inscripcion, id_usuario_alumno, id_clases) VALUES 
-('ACEPTADA', true, '2026-03-20', 4, 1),
-('ACEPTADA', true, '2026-03-21', 5, 1),
-('EN_PROCESO', false, '2026-03-22', 7, 1),
+-- 3. INSCRIPCIONES (Algunas de prueba para los primeros días)
+INSERT INTO inscripcion (estado, fecha_inscripcion, id_usuario_alumno, id_clases) VALUES 
+('ACEPTADA', '2026-05-01', 4, 1),
+('ACEPTADA', '2026-05-01', 5, 2),
+('ACEPTADA', '2026-05-02', 6, 3),
+('ACEPTADA', '2026-05-02', 7, 4),
+('ACEPTADA', '2026-05-03', 8, 5);
 
-('ACEPTADA', true, '2026-03-19', 8, 2),
-('RECHAZADA', false, '2026-03-21', 4, 2),
-
-('ACEPTADA', true, '2026-03-10', 4, 3),
-('ACEPTADA', true, '2026-03-11', 6, 3),
-('ACEPTADA', true, '2026-03-12', 8, 3),
-
-('ACEPTADA', true, '2026-03-15', 5, 4),
-('EN_PROCESO', false, '2026-03-16', 7, 4),
-
-('ACEPTADA', true, '2026-03-18', 6, 5);
 
 -- 4. CONVERSACIONES (Chats iniciales)
 INSERT INTO conversacion (nombre, tipo, fecha_creacion) VALUES 

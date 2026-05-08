@@ -19,8 +19,7 @@ public class ClaseMapper {
         ClaseDTO dto = new ClaseDTO();
         dto.setIdClases(clase.getIdClases());
         dto.setNombre(clase.getNombre());
-        dto.setFechaInicio(clase.getFechaInicio());
-        dto.setFechaFin(clase.getFechaFin());
+        dto.setFecha(clase.getFecha());
         dto.setHoraInicio(clase.getHoraInicio());
         dto.setHoraFin(clase.getHoraFin());
         dto.setCapacidadMaxima(clase.getCapacidadMaxima());
@@ -35,8 +34,7 @@ public class ClaseMapper {
         Clases clase = new Clases();
         clase.setIdClases(dto.getIdClases());
         clase.setNombre(dto.getNombre());
-        clase.setFechaInicio(dto.getFechaInicio());
-        clase.setFechaFin(dto.getFechaFin());
+        clase.setFecha(dto.getFecha());
         clase.setHoraInicio(dto.getHoraInicio());
         clase.setHoraFin(dto.getHoraFin());
         clase.setCapacidadMaxima(dto.getCapacidadMaxima());

@@ -30,15 +30,15 @@ import { RouterModule } from '@angular/router';
               <div class="space-y-2 text-sm text-gray-400">
                 <div class="flex items-center space-x-2">
                   <span>📅</span>
-                  <span>{{ clase.fechaInicio | date }} - {{ clase.fechaFin | date }}</span>
+                  <span>{{ clase.fecha | date:'fullDate' }}</span>
                 </div>
                 <div class="flex items-center space-x-2">
                   <span>⏰</span>
-                  <span>{{ clase.horaInicio }} - {{ clase.horaFin }}</span>
+                  <span>{{ (clase.horaInicio || '').slice(0,5) }} - {{ (clase.horaFin || '').slice(0,5) }}</span>
                 </div>
                 <div class="flex items-center space-x-2 pt-2 border-t border-white/5">
                   <span class="font-bold text-white">Entrenador:</span>
-                  <span>{{ clase.entrenador?.nombre }}</span>
+                  <span>{{ clase.entrenador?.nombre }} {{ clase.entrenador?.apellidos }}</span>
                 </div>
               </div>
 

@@ -22,7 +22,6 @@ public class InscripcionMapper {
         InscripcionDTO dto = new InscripcionDTO();
         dto.setIdInscripcion(inscripcion.getIdInscripcion());
         dto.setEstado(inscripcion.getEstado());
-        dto.setPagado(inscripcion.isPagado());
         dto.setFechaInscripcion(inscripcion.getFechaInscripcion());
         dto.setAlumno(usuarioMapper.toDto(inscripcion.getAlumno()));
         dto.setClases(claseMapper.toDto(inscripcion.getClases()));
@@ -36,7 +35,6 @@ public class InscripcionMapper {
         Inscripcion inscripcion = new Inscripcion();
         inscripcion.setIdInscripcion(dto.getIdInscripcion());
         inscripcion.setEstado(dto.getEstado());
-        inscripcion.setPagado(dto.isPagado());
         inscripcion.setFechaInscripcion(dto.getFechaInscripcion());
         inscripcion.setAlumno(usuarioMapper.toEntity(dto.getAlumno()));
         inscripcion.setClases(claseMapper.toEntity(dto.getClases()));

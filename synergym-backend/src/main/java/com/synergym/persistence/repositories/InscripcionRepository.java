@@ -13,6 +13,8 @@ public interface InscripcionRepository extends JpaRepository<Inscripcion, Intege
     List<Inscripcion> findByClasesIdClases(int claseId);
     
     List<Inscripcion> findByAlumnoEmail(String email);
+    
+    List<Inscripcion> findByAlumnoId(int alumnoId);
 
     boolean existsByAlumnoIdAndClasesEntrenadorId(int alumnoId, int entrenadorId);
 }
