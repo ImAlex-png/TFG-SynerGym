@@ -65,11 +65,11 @@ import { ClaseService, Clase } from '../../core/services/clase.service';
         </div>
 
         <!-- CALENDAR GRID -->
-        <div class="flex divide-x divide-white/5 bg-black/20 overflow-x-auto custom-scrollbar min-h-[700px]">
+        <div class="flex divide-x divide-white/20 bg-black/20 overflow-x-auto custom-scrollbar min-h-[700px]">
           @for (day of weekDays; track day.date.getTime()) {
             <div class="flex-1 min-w-[220px] sm:min-w-[280px] md:min-w-[200px] lg:min-w-0 flex flex-col group/day transition-colors" [class.bg-primary/[0.03]]="isToday(day.date)">
               
-              <div class="p-4 md:p-6 text-center border-b border-white/5 bg-white/[0.01] group-hover/day:bg-white/[0.03] transition-colors">
+              <div class="p-4 md:p-6 text-center border-b border-white/20 bg-white/[0.01] group-hover/day:bg-white/[0.03] transition-colors">
                 <p class="text-[9px] md:text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] mb-2 group-hover/day:text-primary transition-colors">
                   {{ day.name }}
                 </p>
