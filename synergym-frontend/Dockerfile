@@ -1,5 +1,5 @@
 # Build stage
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
@@ -9,7 +9,8 @@ RUN npm run build --configuration=production
 
 # Nginx stage
 FROM nginx:alpine
-COPY --from=builder /app/dist/daw-task-frontend/browser /usr/share/nginx/html
+# Change line 12 to this:
+COPY --from=builder /app/dist/synergym-frontend/ /usr/share/nginx/html/
 COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
 COPY src/assets/env.template.js /usr/share/nginx/html/assets/env.template.js
 RUN apk add --no-cache gettext
