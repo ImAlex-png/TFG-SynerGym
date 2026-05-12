@@ -1,19 +1,21 @@
-# Build stage
+# --- Etapa de Compilación ---
 FROM node:20-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
+RUN npm run build
 
-RUN npm run build --configuration=production
-
-# Nginx stage
+# --- Etapa de Nginx ---
 FROM nginx:alpine
-# Change line 12 to this:
-COPY --from=builder /app/dist/synergym-frontend/ /usr/share/nginx/html/
+
+# Ahora la ruta coincide con tu configuración personalizada
+COPY --from=builder /app/dist/synergym-frontend/browser /usr/share/nginx/html/
+
 COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
+RUN mkdir -p /usr/share/nginx/html/assets
 COPY src/assets/env.template.js /usr/share/nginx/html/assets/env.template.js
 RUN apk add --no-cache gettext
-CMD ["/bin/sh", "-c", "envsubst < /usr/share/nginx/html/assets/env.template.js > /usr/share/nginx/html/assets/env.js && exec nginx -g 'daemon off;'"]
-
 EXPOSE 80
+
+CMD ["/bin/sh", "-c", "envsubst < /usr/share/nginx/html/assets/env.template.js > /usr/share/nginx/html/assets/env.js && exec nginx -g 'daemon off;'"]
