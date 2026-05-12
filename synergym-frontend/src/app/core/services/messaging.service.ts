@@ -38,6 +38,10 @@ export class MessagingService {
     return this.http.post<Conversacion>(`${this.apiUrl}/conversaciones/privada/${idOtroUsuario}`, {});
   }
 
+  getContactos() {
+    return this.http.get<Usuario[]>(`${this.apiUrl}/contactos`);
+  }
+
   getMensajes(idConversacion: number) {
     return this.http.get<Mensaje[]>(`${this.apiUrl}/conversaciones/${idConversacion}/mensajes`);
   }

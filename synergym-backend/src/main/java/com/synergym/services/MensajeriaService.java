@@ -193,23 +193,48 @@ public class MensajeriaService {
         }
     }
 
-    private void validarPermisoMensajePrivado(Usuario emisor, Usuario receptor) {
-        if (emisor.getRol() == Rol.ADMINISTRADOR) return; // Admin puede todo
+    public List<Usuario> getContactosDisponibles(int usuarioId) {
+        Usuario solicitante = usuarioRepository.findById(usuarioId).orElseThrow(() -> new UsuarioNotFoundException("Usuario no encontrado"));
+        List<Usuario> todos = usuarioRepository.findByActivoTrue();
 
+        return todos.stream()
+                .filter(u -> u.getId() != usuarioId)
+                .filter(u -> {
+                    try {
+                        validarPermisoMensajePrivado(solicitante, u);
+                        return true;
+                    } catch (RuntimeException e) {
+                        return false;
+                    }
+                })
+                .collect(Collectors.toList());
+    }
+
+    private void validarPermisoMensajePrivado(Usuario emisor, Usuario receptor) {
+        // Administrador puede contactar con cualquiera y viceversa
+        if (emisor.getRol() == Rol.ADMINISTRADOR || receptor.getRol() == Rol.ADMINISTRADOR) {
+            return;
+        }
+
+        // Entrenadores pueden contactar entre sí
+        if (emisor.getRol() == Rol.ENTRENADOR && receptor.getRol() == Rol.ENTRENADOR) {
+            return;
+        }
+
+        // Entrenador puede hablar con sus alumnos
         if (emisor.getRol() == Rol.ENTRENADOR) {
-            // Entrenador puede hablar con sus alumnos
             if (receptor.getRol() == Rol.ALUMNO && inscripcionRepository.existsByAlumnoIdAndClasesEntrenadorId(receptor.getId(), emisor.getId())) {
                 return;
             }
-            throw new RuntimeException("Como entrenador solo puedes contactar con tus alumnos");
+            throw new RuntimeException("Como entrenador solo puedes contactar con tus alumnos, otros entrenadores o administradores");
         }
 
+        // Alumno puede hablar con su entrenador
         if (emisor.getRol() == Rol.ALUMNO) {
-            // Alumno puede hablar con su entrenador
             if (receptor.getRol() == Rol.ENTRENADOR && inscripcionRepository.existsByAlumnoIdAndClasesEntrenadorId(emisor.getId(), receptor.getId())) {
                 return;
             }
-            throw new RuntimeException("Como alumno solo puedes contactar con tu entrenador");
+            throw new RuntimeException("Como alumno solo puedes contactar con tus entrenadores o con el administrador");
         }
     }
 

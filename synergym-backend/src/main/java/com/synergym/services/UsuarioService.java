@@ -87,11 +87,19 @@ public class UsuarioService implements UserDetailsService {
     // Registro automático de usuarios: solo toma email y contraseña, la encripta y
     // asigna siempre el rol de alumno para evitar privilegios indebidos.
     public Usuario create(com.synergym.services.dto.RegisterRequest request) {
+        validarCamposRegistro(request);
+
         Usuario nuevoUsuario = new Usuario();
         String email = request.getEmail() != null ? request.getEmail() : request.getUsername();
+        
         if (usuarioRepository.findByEmail(email).isPresent()) {
-            throw new UsuarioException("El email ya está registrado");
+            throw new UsuarioException("El email '" + email + "' ya está registrado");
         }
+        
+        if (request.getDni() != null && usuarioRepository.findByDni(request.getDni()).isPresent()) {
+            throw new UsuarioException("El DNI '" + request.getDni() + "' ya está registrado");
+        }
+
         nuevoUsuario.setEmail(email);
 
         org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder encoder = new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
@@ -105,6 +113,32 @@ public class UsuarioService implements UserDetailsService {
         nuevoUsuario.setActivo(true);
 
         return usuarioRepository.save(nuevoUsuario);
+    }
+
+    private void validarCamposRegistro(com.synergym.services.dto.RegisterRequest request) {
+        if (request.getNombre() == null || request.getNombre().trim().length() < 2) {
+            throw new UsuarioException("El nombre es obligatorio y debe tener al menos 2 caracteres");
+        }
+        if (request.getApellidos() == null || request.getApellidos().trim().length() < 2) {
+            throw new UsuarioException("Los apellidos son obligatorios");
+        }
+        
+        String email = request.getEmail() != null ? request.getEmail() : request.getUsername();
+        if (email == null || !email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            throw new UsuarioException("El formato del email no es válido");
+        }
+
+        if (request.getDni() == null || !request.getDni().matches("^[0-9]{8}[A-Z]$")) {
+            throw new UsuarioException("El DNI no es válido (ej: 12345678A)");
+        }
+
+        if (request.getTelefono() == null || !request.getTelefono().matches("^[679][0-9]{8}$")) {
+            throw new UsuarioException("El teléfono no es válido (debe tener 9 dígitos y empezar por 6, 7 o 9)");
+        }
+
+        if (request.getPassword1() == null || request.getPassword1().length() < 6) {
+            throw new UsuarioException("La contraseña debe tener al menos 6 caracteres");
+        }
     }
 
     // Actualizar un usuario existente

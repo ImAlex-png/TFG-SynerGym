@@ -76,6 +76,12 @@ public class MensajeriaController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/contactos")
+    public ResponseEntity<List<Usuario>> getContactos(Authentication auth) {
+        int usuarioId = getUsuarioId(auth);
+        return ResponseEntity.ok(mensajeriaService.getContactosDisponibles(usuarioId));
+    }
+
     private int getUsuarioId(Authentication auth) {
         String email = auth.getName();
         Usuario u = usuarioRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));

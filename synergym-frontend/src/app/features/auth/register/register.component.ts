@@ -81,7 +81,7 @@ export class RegisterComponent {
     nombre: ['', Validators.required],
     apellidos: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
-    telefono: ['', Validators.required],
+    telefono: ['', [Validators.required, Validators.pattern('^[679][0-9]{8}$')]],
     dni: ['', [Validators.required, Validators.pattern('^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE]$')]],
     password: ['', [Validators.required, Validators.minLength(4)]]
   });
@@ -98,7 +98,17 @@ export class RegisterComponent {
 
   onSubmit() {
     if (this.registerForm.invalid) {
-      this.error.set('Por favor, completa todos los campos.');
+      if (this.registerForm.get('dni')?.errors?.['pattern']) {
+        this.error.set('El DNI debe tener 8 números y una letra (ej: 12345678A)');
+      } else if (this.registerForm.get('telefono')?.errors?.['pattern']) {
+        this.error.set('El teléfono debe tener 9 dígitos y empezar por 6, 7 o 9');
+      } else if (this.registerForm.get('email')?.errors?.['email']) {
+        this.error.set('El formato del email no es válido');
+      } else if (this.registerForm.get('password')?.errors?.['minlength']) {
+        this.error.set('La contraseña debe tener al menos 4 caracteres');
+      } else {
+        this.error.set('Por favor, completa todos los campos correctamente.');
+      }
       return;
     }
 
@@ -125,7 +135,9 @@ export class RegisterComponent {
         if (err.status === 403 || err.status === 401) {
           this.doAutoLogin(formVal.email!, formVal.password!);
         } else {
-          this.error.set(err.error?.message || 'Error al crear la cuenta.');
+          // Manejar tanto string plano como objeto con message
+          const msg = typeof err.error === 'string' ? err.error : (err.error?.message || 'Error al crear la cuenta.');
+          this.error.set(msg);
           this.loading.set(false);
         }
       }

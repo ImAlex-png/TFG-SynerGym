@@ -184,6 +184,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.loadUsers();
     this.pollInterval = setInterval(() => {
       this.loadConversaciones();
+      this.loadUsers(); // Actualizar contactos disponibles por si hay nuevas inscripciones
       const selected = this.selectedConv();
       if (selected) {
         this.loadMensajes(selected.id);
@@ -213,7 +214,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   loadUsers() {
-    this.usuarioService.getActivos().subscribe({
+    this.messagingService.getContactos().subscribe({
       next: (data) => this.allUsers.set(data)
     });
   }
@@ -269,6 +270,11 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.showUserList.set(false);
         this.loadConversaciones();
         this.selectConversacion(newConv);
+      },
+      error: (err) => {
+        const msg = typeof err.error === 'string' ? err.error : (err.error?.message || 'No puedes iniciar un chat con este usuario por restricciones de permisos.');
+        alert(msg);
+        this.showUserList.set(false);
       }
     });
   }
