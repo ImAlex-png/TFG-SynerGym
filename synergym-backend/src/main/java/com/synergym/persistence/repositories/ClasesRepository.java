@@ -6,4 +6,5 @@ import com.synergym.persistence.entities.Clases;
 
 public interface ClasesRepository extends JpaRepository<Clases, Integer> {
     List<Clases> findByEntrenadorId(int idEntrenador);
+    List<Clases> findByEntrenadorIdAndFechaGreaterThanEqualOrderByFechaAscHoraInicioAsc(int idEntrenador, java.time.LocalDate fecha);
 }

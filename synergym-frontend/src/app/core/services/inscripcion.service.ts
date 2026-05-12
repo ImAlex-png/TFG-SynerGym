@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 export interface Inscripcion {
   idInscripcion: number;
@@ -13,7 +14,7 @@ export interface Inscripcion {
   providedIn: 'root'
 })
 export class InscripcionService {
-  private readonly apiUrl = 'http://localhost:8081/inscripcion';
+  private readonly apiUrl = `${environment.apiUrl}/inscripcion`;
 
   constructor(private http: HttpClient) {}
 

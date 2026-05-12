@@ -1,14 +1,15 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { tap } from 'rxjs';
-import { LoginResponse, Usuario, Rol } from '../models/usuario.model';
 import { Router } from '@angular/router';
+import { tap } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
+import { Usuario } from '../models/usuario.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly apiUrl = 'http://localhost:8081/auth';
+  private readonly apiUrl = `${environment.apiUrl}/auth`;
 
   // Signals
   currentUser = signal<Usuario | null>(null);

@@ -87,13 +87,20 @@ public class ClaseService {
         return this.clasesRepository.save(claseBD);
     }
 
-    // Obtener el calendario de clases para un entrenador específico
+    // Obtener el calendario de clases para un entrenador específico (solo futuras o en curso)
     public List<Clases> getCalendarioEntrenador(int idEntrenador) {
-        List<Clases> clases = clasesRepository.findByEntrenadorId(idEntrenador);
-        for (Clases c : clases) {
-            c.setAlumnosInscritos((int) inscripcionRepository.countByClasesIdClases(c.getIdClases()));
-        }
-        return clases;
+        LocalDate today = LocalDate.now();
+        java.time.LocalTime now = java.time.LocalTime.now();
+        
+        List<Clases> clases = clasesRepository.findByEntrenadorIdAndFechaGreaterThanEqualOrderByFechaAscHoraInicioAsc(idEntrenador, today);
+        
+        return clases.stream()
+            .filter(c -> c.getFecha().isAfter(today) || (c.getFecha().isEqual(today) && c.getHoraFin().isAfter(now)))
+            .map(c -> {
+                c.setAlumnosInscritos((int) inscripcionRepository.countByClasesIdClases(c.getIdClases()));
+                return c;
+            })
+            .collect(java.util.stream.Collectors.toList());
     }
 
 }

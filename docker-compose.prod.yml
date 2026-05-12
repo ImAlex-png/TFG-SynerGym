@@ -1,0 +1,57 @@
+services:
+  # SERVICIO DE BASE DE DATOS (MariaDB)
+  db:
+    image: mariadb:10.4
+    container_name: synergym-db
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-secreta}
+      - MYSQL_DATABASE=${MYSQL_DATABASE:-synergym}
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+  # SERVICIO DE ADMINISTRACIÓN (phpMyAdmin)
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: synergym-pma
+    restart: always
+    ports:
+      - "8082:80"
+    environment:
+      - PMA_HOST=db
+      - PMA_PORT=3306
+    depends_on:
+      - db
+
+  # SERVICIO BACKEND
+  backend:
+    build: ./synergym-backend
+    container_name: synergym-backend
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mariadb://db:3306/${MYSQL_DATABASE:-synergym}?createDatabaseIfNotExist=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_ROOT_PASSWORD:-secreta}
+      - JWT_SECRET=${JWT_SECRET:-9a4f2c8d3b7a1e6f45c8a0b3f267d8b1d4e6f3c8a9d2b5f8e3a9c8b5f6v8a3d9}
+      - CORS_ALLOWED_ORIGIN=${CORS_ALLOWED_ORIGIN:-*}
+    depends_on:
+      - db
+
+  # SERVICIO FRONTEND
+  frontend:
+    build: ./synergym-frontend
+    container_name: synergym-frontend
+    restart: always
+    ports:
+      - "80:80"
+    environment:
+      - API_URL=${API_URL:-http://localhost:8081}
+    depends_on:
+      - backend
+
+volumes:
+  mariadb_data:

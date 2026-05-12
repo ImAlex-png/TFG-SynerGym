@@ -1,6 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Usuario } from '../models/usuario.model';
+import { environment } from '../../../environments/environment';
 
 export interface Conversacion {
   id: number;
@@ -23,7 +24,7 @@ export interface Mensaje {
   providedIn: 'root'
 })
 export class MessagingService {
-  private readonly apiUrl = 'http://localhost:8081/mensajeria';
+  private readonly apiUrl = `${environment.apiUrl}/mensajeria`;
   
   // Signal global para notificaciones
   hasUnreadMessages = signal<boolean>(false);
