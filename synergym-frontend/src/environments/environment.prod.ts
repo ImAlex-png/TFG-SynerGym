@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: (window as any)['env']?.API_URL || 'http://localhost:8081/synergym'
+  apiUrl: typeof window !== 'undefined'? `http://${window.location.hostname}:8081` : 'http://backend:8081'
 };

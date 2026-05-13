@@ -27,7 +27,8 @@ services:
 
   # SERVICIO BACKEND
   backend:
-    build: ./synergym-backend
+    image: kaizen1997/synergym-backend:latest
+    #build: ./synergym-backend
     container_name: synergym-backend
     restart: always
     ports:
@@ -43,13 +44,14 @@ services:
 
   # SERVICIO FRONTEND
   frontend:
-    build: ./synergym-frontend
+    image: kaizen1997/synergym-frontend:latest
+    #build: ./synergym-frontend
     container_name: synergym-frontend
     restart: always
     ports:
       - "80:80"
     environment:
-      - API_URL=${API_URL:-http://localhost:8081}
+      - API_URL=${API_URL:-http://192.168.15.224}
     depends_on:
       - backend
 

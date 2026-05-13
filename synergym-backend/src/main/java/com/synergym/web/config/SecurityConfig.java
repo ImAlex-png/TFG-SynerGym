@@ -35,6 +35,7 @@ public class SecurityConfig {
 				.cors(cors -> cors.configurationSource(corsConfigurationSource()))
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(auth -> auth
+						.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 						.requestMatchers("/auth/**").permitAll()
 
 						.requestMatchers(HttpMethod.POST, "/usuarios").hasRole("ADMINISTRADOR")
@@ -64,12 +65,11 @@ public class SecurityConfig {
 		// List<String> allowedOrigins = Arrays.stream(frontendUrls.split(","))
 		// .map(String::trim)
 		// .toList();
-		List<String> allowedOrigins = Arrays.asList("http://localhost:4200");
-		configuration.setAllowedOrigins(allowedOrigins);
+		configuration.setAllowedOrigins(List.of("*"));
 		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-		configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept"));
-		configuration.setExposedHeaders(List.of("Authorization"));
-		configuration.setAllowCredentials(true);
+		configuration.setAllowedHeaders(List.of("*"));
+		configuration.setExposedHeaders(List.of("*"));
+		configuration.setAllowCredentials(false);
 
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);
