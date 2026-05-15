@@ -30,7 +30,7 @@ import { RouterModule } from '@angular/router';
         <div class="bg-bg-card p-20 rounded-[2.5rem] border border-dashed border-white/10 text-center">
           <div class="text-6xl mb-6 grayscale opacity-20">🗓️</div>
           <p class="text-gray-500 mb-6 font-medium">Aún no has reservado ninguna clase para los próximos días.</p>
-          <button routerLink="/clases" class="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-2xl font-black uppercase tracking-tighter transition-all shadow-lg shadow-primary/20">
+          <button routerLink="/dashboard" class="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-2xl font-black uppercase tracking-tighter transition-all shadow-lg shadow-primary/20">
             EXPLORAR CLASES
           </button>
         </div>
